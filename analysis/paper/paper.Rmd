@@ -32,6 +32,7 @@ output:
       toc: no
       geometry: margin=1in
       latex_engine: "xelatex"
+      fig_width: 3.5
       pandoc_args:
       - --lua-filter=../templates/scholarly-metadata.lua
       - --lua-filter=../templates/author-info-blocks2.lua
@@ -229,7 +230,7 @@ rate_comp = map_df(lgr_res,
 
 First Choice:
 
-* **[North American Journal of Fisheries](http://www.tandfonline.com/action/journalInformation?show=aimsScope&journalCode=ujfm20)**
+* **[North American Journal of Fisheries](https://afspubs.onlinelibrary.wiley.com/journal/15488675)**
 
 Second Choice:
 
@@ -342,32 +343,32 @@ Funding for this study and development of the STADEM model was partially provide
 # Tables
 
 ```{r lgr-sim-tab}
-crossing(`Trap Rate` = c('0.15', 
+crossing(`Trap rate` = c('0.15', 
                          "0.15 and 0.00 3 weeks"),
-         `Fallback Rate` = c(0.06,
+         `Fallback rate` = c(0.06,
                              0.10),
-         `Re-ascension Rate` = 1,
-         `Window Count Error` = factor(c("No Error",
+         `Re-ascension rate` = 1,
+         `Window count error` = factor(c("No Error",
                                          "10% Error",
                                          "5% Error"),
                                        levels = c("No Error",
                                                   "10% Error",
                                                   "5% Error"))) %>%
-  mutate(`Nighttime Passage Rate` = if_else(`Fallback Rate` == 0.06,
+  mutate(`Nighttime passage rate` = if_else(`Fallback rate` == 0.06,
                                             0.06,
                                             0.05)) %>%
   mutate(Scenario = paste(rep(c('Baseline',
                                 "N-R",
-                                "N-R Trap Down",
-                                "Trap Down"),
+                                "N-R trap down",
+                                "Trap down"),
                               each = 3),
                           c("",
                             "Err H", 
                             "Err L"))) %>%
   select(Scenario, 
-         `Trap Rate`:`Re-ascension Rate`,
-         `Nighttime Passage Rate`,
-         `Window Count Error`) %>%
+         `Trap rate`:`Re-ascension rate`,
+         `Nighttime passage rate`,
+         `Window count error`) %>%
   kable(digits = 2,
         booktabs = T,
         caption = "Summary of simulation scenarios including varying adult trapping, fallback rates, re-ascension, nighttime passage, and window count error rates use to evaluate the performance of STADEM.") %>%
@@ -383,7 +384,7 @@ sum_tab <- res_long_df %>%
   summarise(inCI = sum(inCI),
             nsims = n(),
             Sample_Mean = mean(est),
-            `Relative Bias` = mean(rel_bias),
+            `Relative bias` = mean(rel_bias),
             SE = sqrt(var(est)),
             `Mean CV` = mean(cv),
             RMSD = sqrt(var(est) + mean(bias)^2),
@@ -394,7 +395,7 @@ sum_tab <- res_long_df %>%
                                 "TrapDown",
                                 "Trap Down")) %>%
   select(Scenario,
-         `Relative Bias`,
+         `Relative bias`,
          `Mean CV`,
          RMSD,
          Coverage)
@@ -421,11 +422,11 @@ lgr_est %>%
               values_from = "prnt_val") %>%
   select(Species, 
          Year,
-         `Window Counts` = win_cnt,
+         `Window counts` = win_cnt,
          Total = X.tot.new.all,
          Wild = X.tot.new.wild,
          Hatchery = X.tot.new.hatch,
-         `Hatchery No-Clip` = X.tot.new.hnc) %>%
+         `Hatchery no-clip` = X.tot.new.hnc) %>%
   kable(booktabs = T,
         caption = "Window counts, and estimates of total, wild, hatchery and hatchery no-clip escapement, with coefficients of variation in parenthesis, for Chinook salmon and steelhead from spawn years 2010 to 2019.") %>%
   kable_styling()
