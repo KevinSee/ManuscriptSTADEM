@@ -13,14 +13,9 @@ author:
       email: mike.ackerman@merck.com
       institute: [BM]
       correspondence: false
-  - Katie Lawry:
-      email: katie.lawry@idfg.idaho.gov
-      institute: [IDFG]
-      correspondence: false
 institute:
   - BM: Biomark, Inc. 705 South 8th St., Boise, Idaho, 83702, USA
   - NezPerce: Nez Perce Tribe, Department of Fisheries Resource Management, 14054 Burr Road, PO Box 1942, McCall, Idaho, 83638, USA
-  - IDFG: Idaho Department of Fish and Game, 1414 East Locust Lane, Nampa, Idaho, 83686, USA
 date: "`r format(Sys.time(), '%B %d, %Y')`"
 output:
     bookdown::html_document2:
