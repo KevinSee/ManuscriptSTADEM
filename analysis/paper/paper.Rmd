@@ -18,31 +18,35 @@ institute:
   - NezPerce: Nez Perce Tribe, Department of Fisheries Resource Management, 14054 Burr Road, PO Box 1942, McCall, Idaho, 83638, USA
 date: "`r format(Sys.time(), '%B %d, %Y')`"
 output:
-    bookdown::html_document2:
-      fig_caption: yes
-      number_sections: FALSE
-      toc: no
-      pandoc_args:
-      - --lua-filter=../templates/scholarly-metadata.lua
-      - --lua-filter=../templates/author-info-blocks.lua
-      - --lua-filter=../templates/pagebreak.lua
     bookdown::pdf_document2:
       fig_caption: yes
       number_sections: FALSE
       toc: no
       geometry: margin=1in
       latex_engine: "xelatex"
-      fig_width: 3.5
+      fig_width: 7
       pandoc_args:
       - --lua-filter=../templates/scholarly-metadata.lua
       - --lua-filter=../templates/author-info-blocks2.lua
       - --lua-filter=../templates/pagebreak.lua
+      includes:
+        in_header: ../templates/header_manuscript.tex
     bookdown::word_document2:
       fig_caption: yes
       reference_docx: "../templates/template.docx" # Insert path for the DOCX file
       number_sections: FALSE
       toc: no
       always_allow_html: true
+      fig_width: 7
+      pandoc_args:
+      - --lua-filter=../templates/scholarly-metadata.lua
+      - --lua-filter=../templates/author-info-blocks.lua
+      - --lua-filter=../templates/pagebreak.lua
+    bookdown::html_document2:
+      fig_caption: yes
+      number_sections: FALSE
+      toc: no
+      fig_width: 7
       pandoc_args:
       - --lua-filter=../templates/scholarly-metadata.lua
       - --lua-filter=../templates/author-info-blocks.lua
@@ -260,7 +264,7 @@ However, using window counts as a census of Chinook salmon and steelhead passing
 Here, we present a novel method for estimating escapement, by species, past Lower Granite Dam that incorporates window counts, data from the adult fish trap, and observations of PIT-tagged fish in the adult ladder and that explicitly models nighttime passage, re-ascension and error from both window and trap estimates. To meet desired management and conservation objectives, total escapement estimates include estimates of uncertainty and are parsed into weekly strata. Further, weekly estimates are parsed into three origin groups: wild, hatchery, and hatchery no-clip. Estimates of escapement account for fish that migrate through the ladder at night outside of observation hours and account for fish that may ascend the ladder multiple times. Our methods is implemented in the **ST**ate-space **A**dult **D**am **E**scapement **M**odel (STADEM). The STADEM model is available as a package for the statistical software R [@R-Core-Team2020], and can be downloaded from a [GitHub site](https://github.com/KevinSee/STADEM). To validate the model, we simulate 12 scenarios with varying trapping rates, fallback and re-ascension rates, nighttime passage rates, and window count error rates. The STADEM model combines multiple imperfect sources of data to reduce bias in escapement estimates and provide more reasonable estimates of uncertainty. This STADEM framework could be applied elsewhere to any fish passage barrier with a counting mechanism like a window, an adult trap that samples a portion of the run and contains a PIT tag antenna (or similar).
 
 
-# Materials and Methods
+# Methods
 
 ## Data Requirements
 
@@ -327,7 +331,7 @@ The STADEM model is available as a package for the statistical software R [@R-Co
 
 Our STADEM framework can be applied to any fish passage barrier with a counting mechanism like a window, a trap that samples a subset of the run, and contains a PIT tag antenna. Although STADEM was developed with salmonids in mind, it could be applied to any migrator fish species. Certainly, there is justification for applying a similar framework at Bonneville Dam, as the lowest dam on the Columbia River, to estimate total returns to the Columbia River basin. Lower Granite Dam is important because it is the farthest upstream dam on the Snake River with fish passage, and other methods of estimating escapted to smaller spatial domains (e.g., MGP/DPS, populations) upstream rely on good estimates of total escapement there. Priest Rapids plays a similar role for upstream migrating adult salmonids in the Upper Columbia River, and could also benefit from the STADEM approach.
 
-# Acknowledgements
+## Acknowledgements
 
 Funding for this study and development of the STADEM model was partially provided by the Bonneville Power Administration under project 2003-017-00. Special thanks to Darren Ogden and staff at the Lower Granite Dam adult trap for their hard work and diligent data collection. Thank you to personnel at the Idaho Department of Fish and Game, particularly Paul Bunn and Bill Schrader, for providing access to data from the adult fish trap. Special thanks to staff at Columbia Basin Research and the Columbia River Data Access in Real Time (DART) application, and Susannah Iltis in particular. And finally, thank you to all the folks who have contributed to the development of the STADEM framework through productive critique and conversations.
 
