@@ -1,0 +1,55 @@
+# Appendix B - Simulation Details {#append2}
+
+To simulate fish passing a dam, an $\mathbb{R}$ software function was developed [@R-Core-Team2020]. The function randomly samples observations from assumed probability distribution functions ($\mathcal{PDF}$) with known parameters. Total unique fish, $N$, and a vector, $\omega$, containing the proportions of wild ($w$), hatchery ($h$) and hatchery no-clip ($hnc$) fish passing the dam is set to establish known "truths" of escapement by origin.
+
+$$
+\begin{aligned}
+\left[N_{w}, N_{h}, N_{hnc} \right] &= N * \left[\omega_{w}, \omega_{h}, \omega_{hnc} \right]
+\end{aligned}
+$$
+
+Escapement is then randomly divided across a set number of populations, $n$, by randomly drawing proportions, $\phi_{j,p}$, of origin group $j$ in each poplulation $p$ using a dirichlet $\mathcal{PDF}$. The dirichlet function is parameterized from a vector, $\eta_j$, containing 1's and 0's designating populations with origin $j$ fish returning. $\eta_j$ originates from a bernoulli $\mathcal{PDF}$ and the proportion of populations with each origin, $\tau_j$. Wild fish are assumed to be in all populations; $\tau_w = 1.0$. The product of sampled population proportions $\phi_{j,p}$ and fixed $N_j$ yields a random variable of abundance for each origin in each population, $N_{j,p}$. Summing across origin abundances then gives a random total population abundance, $N_p$, crossing the dam.
+
+$$
+\begin{aligned}
+  \left[\eta_{j,p=1},  ... , \eta_{j,p=n}\right] &\sim \text{Bern}(\tau_j) \\
+  \left[\phi_{j,p=1},  ... , \phi_{j,p=n}\right] &\sim \text{Dir}(\eta_{j,p=1},  ... , \eta_{j,p=n}) \\
+  N_{j,p} &= N_j * \phi_{j,p} \\
+  N_p &= \sum_{j=w, h, hnc} N_{j,p}
+\end{aligned}
+$$
+
+Mean arrival date, $\bar{a}_p$, for each population returning to the dam is drawn from a normal $\mathcal{PDF}$ with hyper-parameters $\mu_a$ and $\sigma^2_a$. Similarly, the variance or spread in run-timing within populations is the absolute value of random variables drawn from a normal $\mathcal{PDF}$ with hyper-parameters $\mu_s$ and $\sigma^2_s$.
+
+$$
+\begin{aligned}
+ \left[\bar{a}_p, ..., \bar{a}_n\right] &\sim \text{Norm}(\mu_a, \sigma^2_a) \\
+ \left[s_p, ..., s_n\right] &\sim \text{Norm}(\mu_s, \sigma^2_s)
+\end{aligned}
+$$
+
+After sampling the mean date of arrival and variances for each population, the date of arrival, $a_{i,p}$, for individual fish, $i$, within each population are drawn from a normal $\mathcal{PDF}$ with population parameters $\bar{a}_p$ and $s^2_p$. This simulates a random arrival day that is similar for all fish returning to the same population, regardless of origin.
+
+$$
+\begin{aligned}
+ date_{i,p} &\sim \text{Norm}(\bar{a}_p, s^2_p) \\
+\end{aligned}
+$$
+
+To examine the sensitivites of models to different fish behavior and dam operational scenarios, seven addtional attributes are randomly assigned to each individual fish. Each attribute is randomly assigned a TRUE/FALSE using a bernoulli $\mathcal{PDF}$ and a fixed probability parameter. Fish passage during the day-time (i.e., during periods of window operation) is modeled using one minus the night-time passage rate ($1 - \nu$). Window observations are conditioned on fish passing during the day and being observed at a set rate, $\gamma$. Whether fish $i$ is sampled by the adult trap is modeled on the weekly set trap rate, $\delta_t$. The rate of previously PIT-tagged fish is determined by $\lambda$, and their subsequent detection at the ladder PIT antenna is governed by $\kappa$. Fallback behavior is modeled with a common rate across all populations, $\psi$. Re-ascension occurs with probability $\rho$, conditioned on fish $i$ falling back. If fish $i$ falls back and re-ascends, the entire process described above is repeated, with some time-lag between initial ascension and re-ascension that is governed by a Poisson $\mathcal{PDF}$ with mean = 2 days. Fish may fall-back and re-ascend up to 3 times, allowing for the possibility of the same fish being counted or trapped multiple times.
+
+$$
+\begin{aligned}
+  day_{i} &\sim \text{Bern}(1-\nu) \\
+  window_{i|d = TRUE} &\sim \text{Bern}(\gamma) \\
+  trapped_{i} &\sim \text{Bern}(\delta_t) \\
+  tagged_{i} &\sim \text{Bern}(\lambda) \\
+  ladder_{i|m = TRUE} &\sim \text{Bern}(\kappa) \\  
+  fallback_{i} &\sim \text{Bern}(\psi) \\
+  re-ascend_{i|f = TRUE} &\sim \text{Bern}(\rho)
+\end{aligned}
+$$
+
+Simulation parameters for model evaluations were set to mimic typical ecapement of spring/summer Chinook to LGD with similar origin proportions, marking rates and run timing as those observed from return years 2010 - 2015. Escapement of each origin ($N_j$) was set at 25,000 wild, 70,000 hatchery and 5,000 hatchery no-clips spread randomly across 25 populations ($n$). Of the 25 populations, each had a 1.0 probability of containing wild fish, 0.50 probability of having hatchery fish and 0.15 probability of receiving hatchery no-clip ($\tau_j$); resulting in an expected 25 wild, 12.5 hatchery and 3.75 hatchery no-clip populations. Mean arrival dates and variability were estimated from PIT-tag detection data queried from the Columbia Basin Research Data Access in Real Time ([DART](http://www.cbr.washington.edu/dart/query/pit_adult_window)) website and organized by release subbasin. Mean arrival date across all subbasins and 2010 - 2015 return years was June $19^{th}$ ($\mu_a = 171$) with a standard deviation of 13 days ($\sigma_a$). While the observed spread (i.e., variance) of arrival dates within subbasins was determined to have a mean ($\mu_s$) of 22 days and a standard deviation of 7 days ($\sigma_s$).
+
+For the specific simulated scenarios, we were interested in STADEM model estimates of origin specific escapment from the combinations of two seperate trapping rates, two fallback, re-ascension and night-passage combinations and three window count error rates; resulting in twelve different scenarios. First, trapping rates were set static at 0.15 across all weeks for six scenarios to mimic an optimium trap operation for an expected return of 25,000 wild fish (i.e., trap $\approx$ 4,000 wild fish). For the remaining six scenarios, trapping rates for weeks 30, 31 and 32 (i.e., July $22^{nd}$ to August $11^{th}$) were changed to 0.00 to test STADEM sensitivities to potential trap shut downs similar to those observed in 2013, 2014 and 2015 [@Ogden2014; @Ogden2016; @Ogden2016b]. To simulate and control the number of re-ascending and night-time passing fish to model response, we altered fallback and night-time passage rates while holding the re-ascension rate constant at $\rho = 1.0$. Altering fallback rates and holding re-ascension constant allowed for a more simple control of the number of fish re-ascending; because the number of re-ascending fish is a function of the number of fallbacks and the re-ascension rate. Six scenarios had equal rates of fallback and night-time passage set at $\psi = \nu = 0.06$ [@Boggs2004] which means other estimator assumptions [@Schrader2013]. The other six scenarios set fallback at $\psi = 0.10$ and night-time passage at $\nu = 0.05$ to create a 5.0% positive bias of unique fish at the window. A potential 5.0% weekly bias was determined from PIT-tag data and within the range of observed weekly difference for return years 2010 - 2015 (Figure \@ref(fig:night-reasc-diff-fig)). Finally, we desired to test the sensitivites of STADEM to potential rates of window count error; 0%, 5% and 10% [@Hatch1994]. Error at the window was simulated as unbiased (i.e., expect varying high and low counts to cancel each other) and is introduced to the sum of daily window counts using a normal $\mathcal{PDF}$.
