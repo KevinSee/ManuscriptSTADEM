@@ -6,7 +6,7 @@ Escapement at LGD is estimated by combining two independent observations, trap c
 
 $$
 \begin{aligned}
-  \log \left( X_{t} \right) &= \log \left( X_{t-1} \right) + e_t \\
+  \ln \left( X_{t} \right) &= \ln \left( X_{t-1} \right) + e_t \\
   e_t &\sim \mathcal{N}(0, \sigma^2_X)
 \end{aligned}
 $$
@@ -66,8 +66,8 @@ $$
 \begin{aligned}
   \left( Y^T_{w,t}, Y^T_{h,t}, Y^T_{hnc,t} \right) &\sim \text{Multinom} \left( \omega_t, Y^T_t \right) \\
   \omega_t &= \frac{\exp(\phi_t)}{\sum{\exp(\phi_t})} \\
-  \phi_{w,t} &= \log \left( \frac{\omega_{w,t}}{\omega_{h,t}} \right) \\
-  \phi_{hnc,t} &= \log \left( \frac{\omega_{hnc,t}}{\omega_{h,t}} \right) \\
+  \phi_{w,t} &= \ln \left( \frac{\omega_{w,t}}{\omega_{h,t}} \right) \\
+  \phi_{hnc,t} &= \ln \left( \frac{\omega_{hnc,t}}{\omega_{h,t}} \right) \\
   \phi_{h,t} &= 0 \\
   \phi_{w,t} &= \phi_{w, t-1} + d_{w,t} \\
   \phi_{hnc,t} &= \phi_{hnc, t-1} + d_{hnc,t} \\
@@ -86,4 +86,4 @@ $$
 
 ## Model Fitting
 
-The model was fit using the JAGS program [@R-rjags], run with R software [@R-Core-Team2020]. Uninformative priors were used for $\sigma_X, \sigma_\eta, \sigma_\theta, \sigma_\omega$ and $\log(X_1)$ (Uniform(0,10)), as well as logit($\eta_1$) and logit($\theta_1$) ($\mathcal{N}(0, 1000)$), and finally $\phi_{w,1}$ and $\phi_{hnc,1}$ ($\mathcal{N}(0, 100)$).
+The model was fit using the JAGS program [@R-rjags], run with R software [@R-Core-Team2020]. Uninformative priors were used for $\sigma_X, \sigma_\eta, \sigma_\theta, \sigma_\omega$ and $\ln(X_1)$ (Uniform(0,10)), as well as logit($\eta_1$) and logit($\theta_1$) ($\mathcal{N}(0, 1000)$), and finally $\phi_{w,1}$ and $\phi_{hnc,1}$ ($\mathcal{N}(0, 100)$).
