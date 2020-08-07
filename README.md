@@ -7,24 +7,24 @@
 
 This repository contains the data and code for our paper:
 
-> See, K.E., R.N. Kinzer and M.W. Ackerman, (2020). *Estimating total
-> escapment past Lower Granite Dam using all possible data*. Name of
-> journal/book <https://doi.org/xxx/xxx>
+> See, K.E., R.N. Kinzer, M.W. Ackerman and K. Lawry (2020).
+> *State-Space Model to Estimate Salmon Escapement Using Multiple Data
+> Sources*. Name of journal/book <https://doi.org/xxx/xxx>
 
 Our pre-print is online here:
 
-> See, K.E., R.N. Kinzer and M.W. Ackerman, (2020). *Estimating total
-> escapment past Lower Granite Dam using all possible data*. Name of
-> journal/book, Accessed 14 May 2020. Online at
+> See, K.E., R.N. Kinzer, M.W. Ackerman and K. Lawry (2020).
+> *State-Space Model to Estimate Salmon Escapement Using Multiple Data
+> Sources*. Name of journal/book, Accessed 06 Aug 2020. Online at
 > <https://doi.org/xxx/xxx>
 
 ### How to cite
 
 Please cite this compendium as:
 
-> See, K.E., R.N. Kinzer and M.W. Ackerman, (2020). *Compendium of R
-> code and data for Estimating total escapment past Lower Granite Dam
-> using all possible data*. Accessed 14 May 2020. Online at
+> See, K.E., R.N. Kinzer, M.W. Ackerman and K. Lawry (2020). *Compendium
+> of R code and data for State-Space Model to Estimate Salmon Escapement
+> Using Multiple Data Sources*. Accessed 06 Aug 2020. Online at
 > <https://doi.org/xxx/xxx>
 
 ### How to download or install
