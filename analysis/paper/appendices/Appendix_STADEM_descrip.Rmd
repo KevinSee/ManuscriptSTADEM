@@ -2,7 +2,7 @@
 
 ## Total and Weekly Escapement 
 
-Escapement at LGD is estimated by combining two independent observations, trap catches and window counts, of the true number of fish crossing the dam in a state-space model with a weekly time-step. Both are assumed to be corrupted observations of the true unknown number of fish crossing LGD each week. The log of the true number of fish crossing ($X_t$), is modeled as a random walk process [@Shumway2010].
+Escapement at Lower Granite Dam (LGD) is estimated by combining two independent observations, trap catches and window counts, of the true number of fish crossing the dam in a state-space model [@royle2008hierarchical] with a weekly time-step. Both are assumed to be corrupted observations of the true unknown number of fish crossing LGD each week. The log of the true number of fish crossing ($X_t$), is modeled as a random walk process [@Shumway2010].
 
 $$
 \begin{aligned}
@@ -22,7 +22,7 @@ $$
 
 The estimate of the weekly trap rate is derived based on previously PIT-tagged spring/summer Chinook and steelhead who are crossing LGD that week. The fish caught in the trap that week are considered the "mark" group, and all the PIT tagged fish who are detected at the upper end of the LGD fish ladder that week are considered the second capture group (which includes recaptures of the the "marked" fish). From this data, we can estimate the total number of previoiusly PIT tagged fish crossing LGD that week, and the proportion of those that are caught in the trap is the weekly trap rate. The uncertainty in estimates of total fish is translated into uncertainty in the trap rate, and this is then summarised with a beta distribution ($\text{Beta} \left(\hat{\alpha_t}, \hat{\beta_t} \right)$) that becomes an input into STADEM. Although the group of previously PIT tagged fish is not assumed to be representative of the overall run, the rate at which they are caught in the trap should be the same rate that the overall run experiences. 
 
-The number of fish counted at the window, $Y^W_t$, is modeled as a (potentially) over-dispersed negative binomial process, with an expected value of $X_t^{day}$, the number of fish crossing the dam while the window is open. This is simply the total number of fish crossing that week, $X_t$, multiplied by the propoortion of fish crossing while the window is open for counting, $\theta_t$, calculated on a weekly basis. In the formula below, $p_t$ is the proportion of fish observed at the window and $r$ is the shape parameter. If $r$ is estimated to be small provides evidence for over-dispersion, and as it grows very large, the negative binomial distribution behaves like a Poisson distribution.
+The number of fish counted at the window, $Y^W_t$, is modeled as a (potentially) over-dispersed negative binomial process, with an expected value of $X_t^{day}$, the number of fish crossing the dam while the window is open. This is simply the total number of fish crossing that week, $X_t$, multiplied by the propoortion of fish crossing while the window is open for counting, $\theta_t$, calculated on a weekly basis. In the formula below, $p_t$ is the proportion of fish observed at the window and $r$ is the shape parameter. If $r$ is estimated to be small it provides evidence for over-dispersion, and as it grows very large, the negative binomial distribution behaves like a Poisson distribution.
 
 $$
 \begin{aligned}

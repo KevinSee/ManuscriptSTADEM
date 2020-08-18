@@ -29,6 +29,15 @@ output:
       - --lua-filter=../templates/scholarly-metadata.lua
       - --lua-filter=../templates/author-info-blocks.lua
       - --lua-filter=../templates/pagebreak.lua
+    bookdown::html_document2:
+      fig_caption: yes
+      number_sections: FALSE
+      toc: no
+      fig_width: 7
+      pandoc_args:
+      - --lua-filter=../templates/scholarly-metadata.lua
+      - --lua-filter=../templates/author-info-blocks.lua
+      - --lua-filter=../templates/pagebreak.lua
     bookdown::pdf_document2:
       fig_caption: yes
       number_sections: FALSE
@@ -42,15 +51,6 @@ output:
       - --lua-filter=../templates/pagebreak.lua
       includes:
         in_header: ../templates/header_manuscript.tex
-    bookdown::html_document2:
-      fig_caption: yes
-      number_sections: FALSE
-      toc: no
-      fig_width: 7
-      pandoc_args:
-      - --lua-filter=../templates/scholarly-metadata.lua
-      - --lua-filter=../templates/author-info-blocks.lua
-      - --lua-filter=../templates/pagebreak.lua
 fontsize: 12pt
 mainfont: Times New Roman
 bibliography:
@@ -253,7 +253,7 @@ Others:
 
 # Introduction
 
-Fish escapement is the number of adults that survive juvenile and adult rearing, escape harvest and return to their natal habitat to potentially spawn (e.g. @Bue1998). For anadromous fishes, escapement is often estimated at a fixed location in a river system prior to fish reaching their spawning area. Escapement estimates facilitate effective fisheries management, and particularly, estimates of escapement for each component group (e.g., stock, population, age, origin [wild, hatchery]; @hess2014monitoring; @steinhorst2017abundance) provide valuable information that fisheries managers use to achieve sustainable harvest, while protecting small and vulnerable populations. Accurate escapement estimates are increasingly important for depleted populations as they inform viable salmonid metrics [@mcelhany2000viable], and facilitate assessments of population viability and extinction risk [@nwfsc2015; @williams2016viability] and climate change vulerability [@crozier2019climate].
+Fish escapement is the number of adults that survive juvenile and adult rearing, escape harvest and return to their natal habitat to potentially spawn (e.g. @Bue1998). For anadromous fishes, escapement is often estimated at a fixed location in a river system prior to fish reaching their spawning area. Escapement estimates facilitate effective fisheries management, and particularly, estimates of escapement for each component group (e.g., stock, population, age, origin [wild, hatchery]; @hess2014monitoring; @Steinhorst2017) provide valuable information that fisheries managers use to achieve sustainable harvest, while protecting small and vulnerable populations. Accurate escapement estimates are increasingly important for depleted populations as they inform viable salmonid metrics [@mcelhany2000viable], and facilitate assessments of population viability and extinction risk [@nwfsc2015; @williams2016viability] and climate change vulerability [@crozier2019climate].
 
 Populations of Chinook Salmon Oncorhynchus tshawytscha and steelhead trout O. mykiss in the Snake River basin of Pacific Northwest, USA, are depleted following decades of substantial harvest and anthropogenic changes to their migration corridor (e.g., construction of hydroelectric dams on the Snake and Columbia rivers) and tributary habitats [@nehlsen1991pacific; @mcclure2003large; @nwfsc2015]. As a result, Snake River spring-summer run Chinook Salmon (hereafter Chinook Salmon) were classified as threatened in 1992 under the Endangered Species Act (ESA; Federal Registry Notice 57 FR 14653), and Snake River summer-run steelhead trout (hereafter steelhead) were listed as threatened five years later (Federal Registry Notice 62 FR 43937). Snake River Chinook Salmon and steelhead have substantial recreational, commercial, cultural and subsistence value both within the Snake River basin as well as in downstream corridors (i.e., Columbia River) and ocean fisheries. The aggregate escapement of Snake River Chinook Salmon and steelhead populations, with the exception of Tucannon River, is measured at Lower Granite Dam located in southeast Washington; the final dam on the Snake River that returning adults must pass prior to heading to tributary spawning locations. Many fisheries management and conservation actions are made based on estimates of escapement at Lower Granite Dam parsed by species and origin (**Snake Basin Harvest Plans?**). Additionally, harvest openings and closures, both upstream in Snake River fisheries and downstream in mainstem Snake and Columbia River fisheries, are predicated on escapements at Lower Granite Dam (**could cite US v OR Management Agreement and Snake Basin Harvest Plans?**). 
 
