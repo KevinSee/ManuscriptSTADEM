@@ -14,6 +14,27 @@ knitr::opts_chunk$set(
 Title <- "State-Space Model to Estimate Salmon Escapement Using Multiple Data Sources"
 ```
 
+**Possible journals:**
+
+First Choice:
+
+* **[North American Journal of Fisheries Management](https://afspubs.onlinelibrary.wiley.com/journal/15488675)**
+
+Second Choice:
+
+* [Transactions of the American Fisheries Society](https://afspubs.onlinelibrary.wiley.com/journal/15488659)
+
+Others:
+
+* [Canadian Journal of Fisheries and Aquatic Sciences](http://www.nrcresearchpress.com/page/cjfas/editors)
+
+* [Fisheries Research](https://www.journals.elsevier.com/fisheries-research)
+
+* [Fishery Bulletin](http://fishbull.noaa.gov/)
+
+* [Fish and Fisheries](http://onlinelibrary.wiley.com/journal/10.1111/(ISSN)1467-2979/homepage/ProductInformation.html)
+
+
 # ManuscriptSTADEM
 
 [![Binder](https://mybinder.org/badge_logo.svg)](https://mybinder.org/v2/gh/KevinSee/ManuscriptSTADEM/master?urlpath=rstudio)
