@@ -92,5 +92,12 @@ for(i in 1:length(species)){
     save(stadem_mod, stadem_list,
          file = paste0(stademFolder,'/LGR_STADEM_', spp, '_', yr, '.rda'))
 
+    rm(incl_jacks,
+       start_date,
+       end_date,
+       stadem_list,
+       jags_data_list,
+       stadem_mod)
+
   } # close j loop
 } # close i loop
