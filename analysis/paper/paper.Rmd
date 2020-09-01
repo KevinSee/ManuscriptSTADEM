@@ -18,6 +18,26 @@ institute:
   - NezPerce: Nez Perce Tribe, Department of Fisheries Resource Management, 14054 Burr Road, PO Box 1942, McCall, Idaho, 83638, USA
 date: "`r format(Sys.time(), '%B %d, %Y')`"
 output:
+    bookdown::html_document2:
+      fig_caption: yes
+      number_sections: FALSE
+      toc: no
+      fig_width: 7
+      pandoc_args:
+      - --lua-filter=../templates/scholarly-metadata.lua
+      - --lua-filter=../templates/author-info-blocks.lua
+      - --lua-filter=../templates/pagebreak.lua
+    bookdown::word_document2:
+      fig_caption: yes
+      reference_docx: "../templates/template.docx" # Insert path for the DOCX file
+      number_sections: FALSE
+      toc: no
+      always_allow_html: true
+      fig_width: 7
+      pandoc_args:
+      - --lua-filter=../templates/scholarly-metadata.lua
+      - --lua-filter=../templates/author-info-blocks.lua
+      - --lua-filter=../templates/pagebreak.lua
     bookdown::pdf_document2:
       fig_caption: yes
       number_sections: FALSE
@@ -31,26 +51,6 @@ output:
       - --lua-filter=../templates/pagebreak.lua
       includes:
         in_header: ../templates/header_manuscript.tex
-    bookdown::word_document2:
-      fig_caption: yes
-      reference_docx: "../templates/template.docx" # Insert path for the DOCX file
-      number_sections: FALSE
-      toc: no
-      always_allow_html: true
-      fig_width: 7
-      pandoc_args:
-      - --lua-filter=../templates/scholarly-metadata.lua
-      - --lua-filter=../templates/author-info-blocks.lua
-      - --lua-filter=../templates/pagebreak.lua
-    bookdown::html_document2:
-      fig_caption: yes
-      number_sections: FALSE
-      toc: no
-      fig_width: 7
-      pandoc_args:
-      - --lua-filter=../templates/scholarly-metadata.lua
-      - --lua-filter=../templates/author-info-blocks.lua
-      - --lua-filter=../templates/pagebreak.lua
 fontsize: 12pt
 mainfont: Times New Roman
 bibliography:
@@ -59,7 +59,7 @@ bibliography:
 - AckermanLibrary.bib
 csl: "../templates/american-fisheries-society.csl" # Insert path for the bib-style
 abstract: |
-  Accurate estimates of the number of salmonids passing Lower Granite Dam on the Snake River, by species and origin, are a critical input to assessing the status and trends of various populations, as well as successfully management of fisheries in that area. Here we describe a state-space model that estimates such escapement past a dam by using window counts, PIT tag observations and data from an adult fish trap, accounting for issues such as night-time passage, fallback and re-ascension, potential observation error at the window and uncertainty in the adult trap rate. We tested this approach using a simulation framework that mimicked several levels of observation error, differences between night-time passage and re-ascension rates and the possibility of the adult trap being closed for some period of time, and found it to produce unbiased estimates across all tested scenarios. We also applied this model to data from the Lower Granite dam to produces estimates of wild, clipped hatchery and unclipped hatchery spring-summer run Chinook Salmon and steelhead from spawn years 2010-2019. 
+  Accurate estimates of the number of salmonids passing Lower Granite Dam on the Snake River, by species and origin, are a critical input to assessing the status and trends of various populations, as well as successfully management of fisheries in that area. Here we describe a state-space model that estimates such escapement past a dam by using window counts, PIT tag observations and data from an adult fish trap, accounting for issues such as night-time passage, fallback and re-ascension, potential observation error at the window and uncertainty in the adult trap rate. We tested this approach using a simulation framework that mimicked several levels of observation error, differences between night-time passage and re-ascension rates and the possibility of the adult trap being closed for some period of time, and found it to produce unbiased estimates across all tested scenarios. We also applied this model to data from the Lower Granite dam to produce estimates of wild, clipped hatchery and unclipped hatchery spring-summer run Chinook Salmon and steelhead from spawn years 2010-2019. 
 keywords: |
   escapement; Chinook; steelhead; salmon; Lower Granite Dam; state-space model; Bayesian model
 highlights: |
@@ -290,7 +290,7 @@ STADEM results were very similar across all scenarios (Figure \@ref(fig:rel-bias
 
 ## Lower Granite Application
 
-We applied STADEM to data from Lower Granite Dam for Chinook Salmon and steelhead for spawn years 2010–2019. Estimates of total escapement, as well as estimates of wild, hatchery, and hatchery no-clip estimates are presented in Table \@ref(tab:lgr-tab). Coefficients of variation ranged from 2.7-24.8% for wild fish, 2.2-10.5% for hatchery fish, 3.6-11% for hatchery no-clip fish and 2.1-10.4% for total unique fish past Lower Granite Dam. Excluding 2019, which had the lowest escapement estimates for both species, the maximum CVs were 6.6% for wild fish, 5.6% for clipped hatchery fish, 8% for unclipped hatchery fish and 5.2% for total unque fish.  
+We applied STADEM to data from Lower Granite Dam for Chinook Salmon and steelhead for spawn years 2010–2019. Estimates of total escapement, as well as estimates of wild, hatchery, and hatchery no-clip estimates are presented in Table \@ref(tab:lgr-tab). Coefficients of variation ranged from 2.5-16% for wild fish, 2.3-9.4% for hatchery fish, 3.4-24.2% for hatchery no-clip fish and 2.2-9.8% for total unique fish past Lower Granite Dam. Excluding 2019, which had the lowest escapement estimates for both species, the maximum CVs were 7.1% for wild fish, 4.8% for clipped hatchery fish, 7.8% for unclipped hatchery fish and 4.7% for total unque fish.  
 
 Weekly estimates of total escapement over Lower Granite Dam tracked the window counts and trap estimates (Figure \@ref(fig:jags-fit-fig)). STADEM point estimates were often between estimates based on window counts, and those based on the number of fish caught in the adult trap. However, when very few fish were caught in the trap, or there was more uncertainty about the trap rate that week, STADEM estimates tracked the window counts more closely, as seen in the second week of July 2014, in Figure \@ref(fig:jags-fit-fig). That year also shows the utility of STADEM in dealing with missing data, as the trap was shut down for several weeks in July and August.
 
@@ -558,7 +558,9 @@ rel_bias_p
 
 load('../data/derived_data/STADEM_results/LGR_STADEM_Chinook_2014.rda')
 plotTimeSeries(stadem_mod,
-               weeklyData = stadem_list$weeklyData)
+               weeklyData = stadem_list$weeklyData) +
+  guides(color = guide_legend(nrow = 2),
+         shape = guide_legend(nrow = 2))
 ```
 
 ```{r night-reasc-diff-fig, fig.cap = "Nighttime passage rate plotted against re-ascension rate, calculated from observed PIT tags for each week of spawn years 2010-2019. Colors correspond to different spawn year, while the size of each point is proportional to the window count that week. The dashed line is the 1-1 line."}
