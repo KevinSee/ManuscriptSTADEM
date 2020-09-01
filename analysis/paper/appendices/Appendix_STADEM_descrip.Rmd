@@ -11,16 +11,14 @@ $$
 \end{aligned}
 $$
 
-The number of fish caught in the trap, $Y^T_t$, for week $t$ is modeled as a binomial process based on the unknown true trap rate that week, $\nu_t$, and the unknown true number of fish crossing the dam that week, $X_t$. The true trap rate is estimated from a beta distribution with previously estimated parameters, $\hat{\alpha_t}$ and $\hat{\beta_t}$, informed by the mark-recapture estimate of the trap rate. 
+The number of fish caught in the trap, $Y^T_t$, for week $t$ is modeled as a binomial process based on the unknown true trap rate that week, $\nu_t$, and the unknown true number of fish crossing the dam that week, $X_t$. The estimate of the true weekly trap rate is derived based on previously PIT-tagged spring/summer Chinook and steelhead who are crossing LGD that week, using a Lincoln-Peterson mark-recapture model [@Seber2002]. The fish, from both species, caught in the trap that week are considered the "mark" group ($m_t$), and all the previously PIT tagged fish who are detected at the upper end of the LGD fish ladder that week are considered the second capture group, $M_t$ (which includes recaptures of the the "marked" fish). The proportion of previously marked fish that are caught in the adult trap, $m/M$ can be modeled with a binomial distribution using the same trap rate parameter, $\nu_t$. Although the group of previously PIT tagged fish is not assumed to be representative of the overall run, the rate at which they are caught in the trap should be the same rate that the overall run experiences. The more tagged fish crossing the dam in a particular week, the more certain we can be of the true trap rate.
 
 $$
 \begin{aligned}
-  \nu_t &\sim \text{Beta} \left(\hat{\alpha_t}, \hat{\beta_t} \right) \\
+  m_t &\sim \text{Bin} \left( \nu_t, M_t \right) \\
   Y^T_t &\sim \text{Bin} \left( \nu_t, X_t \right) \\
 \end{aligned}
 $$
-
-The estimate of the weekly trap rate is derived based on previously PIT-tagged spring/summer Chinook and steelhead who are crossing LGD that week. The fish caught in the trap that week are considered the "mark" group, and all the PIT tagged fish who are detected at the upper end of the LGD fish ladder that week are considered the second capture group (which includes recaptures of the the "marked" fish). From this data, we can estimate the total number of previoiusly PIT tagged fish crossing LGD that week, and the proportion of those that are caught in the trap is the weekly trap rate. The uncertainty in estimates of total fish is translated into uncertainty in the trap rate, and this is then summarised with a beta distribution ($\text{Beta} \left(\hat{\alpha_t}, \hat{\beta_t} \right)$) that becomes an input into STADEM. Although the group of previously PIT tagged fish is not assumed to be representative of the overall run, the rate at which they are caught in the trap should be the same rate that the overall run experiences. 
 
 The number of fish counted at the window, $Y^W_t$, is modeled as a (potentially) over-dispersed negative binomial process, with an expected value of $X_t^{day}$, the number of fish crossing the dam while the window is open. This is simply the total number of fish crossing that week, $X_t$, multiplied by the propoortion of fish crossing while the window is open for counting, $\theta_t$, calculated on a weekly basis. In the formula below, $p_t$ is the proportion of fish observed at the window and $r$ is the shape parameter. If $r$ is estimated to be small it provides evidence for over-dispersion, and as it grows very large, the negative binomial distribution behaves like a Poisson distribution.
 
@@ -60,18 +58,19 @@ $$
 
 ## Origin Proportions
 
-After estimating the total number of fish to have crossed Lower Granite each week, $X_t$, the total must be further refined into the number of wild fish, $X_{w,t}$, hatchery fish, $X_{h,t}$ and hatchery no-clip fish, $X_{hnc, t}$. This is done by estimating a weekly origin proportion vector, $\omega_t$ based on the random sample of fish caught in trap that week, $Y^T_t$. The observed number of wild, $Y^T_{w,t}$, hatchery, $Y^T_{h,t}$, and hatchery no-clip, $Y^T_{hnc,t}$, fish caught in the trap that week is assumed to come from a multinomial distribution with probability vector $\omega_t$. The log-odds ratio of the proportions in $\omega_t$, in relation to the proportion of hatchery fish, $\omega_{h,t}$ is modeled as a random walk, so it can change through time. This allows the proportions of wild, hatchery and hatchery no-clip fish to shift throughout the season, based on the data available from the fish trap. 
+After estimating the total number of fish to have crossed Lower Granite each week, $X_t$, the total must be further refined into the number of wild fish, $X_{w,t}$, hatchery clipped fish, $X_{hc,t}$ and hatchery no-clip fish, $X_{hnc, t}$. This is done by estimating a weekly origin proportion vector, $\omega_t$ based on the random sample of fish caught in trap that week, $Y^T_t$. The observed number of wild, $Y^T_{w,t}$, hatchery clipped, $Y^T_{hc,t}$, and hatchery no-clip, $Y^T_{hnc,t}$, fish caught in the trap that week is assumed to come from a multinomial distribution with probability vector $\omega_t$. The log-odds ratio of the proportions in $\omega_t$, in relation to the proportion of clipped hatchery fish, $\omega_{hc,t}$ is modeled as a random walk, so it can change through time. This allows the proportions of wild, hatchery clipped and hatchery no-clip fish to shift throughout the season, based on the data available from the fish trap. 
 
 $$
 \begin{aligned}
-  \left( Y^T_{w,t}, Y^T_{h,t}, Y^T_{hnc,t} \right) &\sim \text{Multinom} \left( \omega_t, Y^T_t \right) \\
+  \left( Y^T_{w,t}, Y^T_{hc,t}, Y^T_{hnc,t} \right) &\sim \text{Multinom} \left( \omega_t, Y^T_t \right) \\
   \omega_t &= \frac{\exp(\phi_t)}{\sum{\exp(\phi_t})} \\
-  \phi_{w,t} &= \ln \left( \frac{\omega_{w,t}}{\omega_{h,t}} \right) \\
-  \phi_{hnc,t} &= \ln \left( \frac{\omega_{hnc,t}}{\omega_{h,t}} \right) \\
-  \phi_{h,t} &= 0 \\
+  \phi_{hc,t} &= 0 \\
+  \phi_{w,t} &= \ln \left( \frac{\omega_{w,t}}{\omega_{hc,t}} \right) \\
+  \phi_{hnc,t} &= \ln \left( \frac{\omega_{hnc,t}}{\omega_{hc,t}} \right) \\
   \phi_{w,t} &= \phi_{w, t-1} + d_{w,t} \\
   \phi_{hnc,t} &= \phi_{hnc, t-1} + d_{hnc,t} \\
-  d_t &\sim \mathcal{N}(0, \sigma^2_\omega) \\
+  d_{w,t} &\sim \mathcal{N}(0, \sigma^2_\omega) \\
+  d_{hnc,t} &\sim \mathcal{N}(0, \sigma^2_\omega) \\
 \end{aligned}
 $$
 
@@ -79,11 +78,11 @@ Finally, the number of unique fish crossing Lower Granite each week, $X_{w,t}$, 
 
 $$
 \begin{aligned}
-  \begin{bmatrix} X_{w,t} \\ X_{h,t} \\ X_{hnc,t} \end{bmatrix}
-  &= X_t * (1 - \eta_t) * \begin{bmatrix} \omega_{w,t} \\ \omega_{h,t} \\ \omega_{hnc,t} \end{bmatrix}
+  \begin{bmatrix} X_{w,t} \\ X_{hc,t} \\ X_{hnc,t} \end{bmatrix}
+  &= X_t * (1 - \eta_t) * \begin{bmatrix} \omega_{w,t} \\ \omega_{hc,t} \\ \omega_{hnc,t} \end{bmatrix}
 \end{aligned}
 $$
 
 ## Model Fitting
 
-The model was fit using the JAGS program [@R-rjags], run with R software [@R-Core-Team2020]. Uninformative priors were used for $\sigma_X, \sigma_\eta, \sigma_\theta, \sigma_\omega$ and $\ln(X_1)$ (Uniform(0,10)), as well as logit($\eta_1$) and logit($\theta_1$) ($\mathcal{N}(0, 1000)$), and finally $\phi_{w,1}$ and $\phi_{hnc,1}$ ($\mathcal{N}(0, 100)$).
+The model was fit using the JAGS program [@R-rjags], run with R software [@R-Core-Team2020]. Variance parameters $\sigma_X, \sigma_\eta, \sigma_\theta$, and $\sigma_\omega$, as well as the initial abundance, $X_1$, and the overdispersion parameter of the negative binomial, $r$, were given half-Cauchy priors with mean of 0 and scale of 100. The initial day-time passage and re-ascension rates, $\theta_1$ and $\eta_1$ were given Uniform(0,1) priors. Finally, $\phi_{w,1}$ and $\phi_{hnc,1}$ were given priors of Uniform(-3,3), in an effort to make $\omega_1$ as uniformative as possible.
