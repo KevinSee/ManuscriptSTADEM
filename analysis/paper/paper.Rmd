@@ -27,17 +27,6 @@ output:
       - --lua-filter=../templates/scholarly-metadata.lua
       - --lua-filter=../templates/author-info-blocks.lua
       - --lua-filter=../templates/pagebreak.lua
-    bookdown::word_document2:
-      fig_caption: yes
-      reference_docx: "../templates/template.docx" # Insert path for the DOCX file
-      number_sections: FALSE
-      toc: no
-      always_allow_html: true
-      fig_width: 7
-      pandoc_args:
-      - --lua-filter=../templates/scholarly-metadata.lua
-      - --lua-filter=../templates/author-info-blocks.lua
-      - --lua-filter=../templates/pagebreak.lua
     bookdown::pdf_document2:
       fig_caption: yes
       number_sections: FALSE
@@ -51,6 +40,17 @@ output:
       - --lua-filter=../templates/pagebreak.lua
       includes:
         in_header: ../templates/header_manuscript.tex
+    bookdown::word_document2:
+      fig_caption: yes
+      reference_docx: "../templates/template.docx" # Insert path for the DOCX file
+      number_sections: FALSE
+      toc: no
+      always_allow_html: true
+      fig_width: 7
+      pandoc_args:
+      - --lua-filter=../templates/scholarly-metadata.lua
+      - --lua-filter=../templates/author-info-blocks.lua
+      - --lua-filter=../templates/pagebreak.lua
 fontsize: 12pt
 mainfont: Times New Roman
 bibliography:
