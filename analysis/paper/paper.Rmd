@@ -18,6 +18,19 @@ institute:
   - NezPerce: Nez Perce Tribe, Department of Fisheries Resource Management, 14054 Burr Road, PO Box 1942, McCall, Idaho, 83638, USA
 date: "`r format(Sys.time(), '%B %d, %Y')`"
 output:
+    bookdown::pdf_document2:
+      fig_caption: yes
+      number_sections: FALSE
+      toc: no
+      geometry: margin=1in
+      latex_engine: "xelatex"
+      fig_width: 7
+      pandoc_args:
+      - --lua-filter=../templates/scholarly-metadata.lua
+      - --lua-filter=../templates/author-info-blocks2.lua
+      - --lua-filter=../templates/pagebreak.lua
+      includes:
+        in_header: ../templates/header_manuscript.tex
     bookdown::html_document2:
       fig_caption: yes
       number_sections: FALSE
@@ -38,19 +51,6 @@ output:
       - --lua-filter=../templates/scholarly-metadata.lua
       - --lua-filter=../templates/author-info-blocks.lua
       - --lua-filter=../templates/pagebreak.lua
-    bookdown::pdf_document2:
-      fig_caption: yes
-      number_sections: FALSE
-      toc: no
-      geometry: margin=1in
-      latex_engine: "xelatex"
-      fig_width: 7
-      pandoc_args:
-      - --lua-filter=../templates/scholarly-metadata.lua
-      - --lua-filter=../templates/author-info-blocks2.lua
-      - --lua-filter=../templates/pagebreak.lua
-      includes:
-        in_header: ../templates/header_manuscript.tex
 fontsize: 12pt
 mainfont: Times New Roman
 bibliography:
@@ -290,7 +290,7 @@ STADEM results were very similar across all scenarios (Figure \@ref(fig:rel-bias
 
 ## Lower Granite Application
 
-We applied STADEM to data from Lower Granite Dam for Chinook Salmon and steelhead for spawn years 2010–2019. Estimates of total escapement, as well as estimates of wild, hatchery, and hatchery no-clip estimates are presented in Table \@ref(tab:lgr-tab). Coefficients of variation ranged from 2.5-16% for wild fish, 2.3-9.4% for hatchery fish, 3.4-24.2% for hatchery no-clip fish and 2.2-9.8% for total unique fish past Lower Granite Dam. Excluding 2019, which had the lowest escapement estimates for both species, the maximum CVs were 7.1% for wild fish, 4.8% for clipped hatchery fish, 7.8% for unclipped hatchery fish and 4.7% for total unque fish.  
+We applied STADEM to data from Lower Granite Dam for Chinook Salmon and steelhead for spawn years 2010–2019. Estimates of total escapement, as well as estimates of wild, hatchery, and hatchery no-clip estimates are presented in Table \@ref(tab:lgr-tab). Coefficients of variation ranged from 2.5-7.1% for wild fish, 2.3-5.1% for clipped hatchery fish, 3.4-8.8% for hatchery no-clip fish and 2.2-4.7% for total unique fish past Lower Granite Dam.   
 
 Weekly estimates of total escapement over Lower Granite Dam tracked the window counts and trap estimates (Figure \@ref(fig:jags-fit-fig)). STADEM point estimates were often between estimates based on window counts, and those based on the number of fish caught in the adult trap. However, when very few fish were caught in the trap, or there was more uncertainty about the trap rate that week, STADEM estimates tracked the window counts more closely, as seen in the second week of July 2014, in Figure \@ref(fig:jags-fit-fig). That year also shows the utility of STADEM in dealing with missing data, as the trap was shut down for several weeks in July and August.
 
