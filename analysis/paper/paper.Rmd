@@ -59,7 +59,7 @@ bibliography:
 - AckermanLibrary.bib
 csl: "../templates/american-fisheries-society.csl" # Insert path for the bib-style
 abstract: |
-  Accurate estimates of the number of salmonids passing Lower Granite Dam on the Snake River, by species and origin, are a critical input to assessing the status and trends of various populations, as well as successfully management of fisheries in that area. Here we describe a state-space model that estimates such escapement past a dam by using window counts, PIT tag observations and data from an adult fish trap, accounting for issues such as night-time passage, fallback and re-ascension, potential observation error at the window and uncertainty in the adult trap rate. We tested this approach using a simulation framework that mimicked several levels of observation error, differences between night-time passage and re-ascension rates and the possibility of the adult trap being closed for some period of time, and found it to produce unbiased estimates across all tested scenarios. We also applied this model to data from the Lower Granite dam to produce estimates of wild, clipped hatchery and unclipped hatchery spring-summer run Chinook Salmon and steelhead from spawn years 2010-2019. 
+  Accurate estimates of the number of salmonids passing Lower Granite Dam on the Snake River, by species and origin, are a critical input to assessing the status and trends of various populations, as well as successful management of fisheries in the Snake River basin. Here we describe a state-space model that estimates such escapement past a dam by using window counts, passive integrated transponder (PIT) tag observations and data from an adult fish trap, accounting for issues such as nighttime passage, fallback and re-ascension, potential observation error at the window and uncertainty in the adult trap rate. We tested this approach using a simulation framework that mimicked several levels of observation error, differences between nighttime passage and re-ascension rates and the possibility of the adult trap being closed for some period of time, and found it to produce unbiased estimates across all tested scenarios. We also applied this model to data from the Lower Granite dam to produce estimates of wild, clipped hatchery and unclipped hatchery spring-summer run Chinook Salmon and steelhead from spawn years 2010-2019. 
 keywords: |
   escapement; Chinook; steelhead; salmon; Lower Granite Dam; state-space model; Bayesian model
 highlights: |
@@ -175,11 +175,12 @@ res_long_df <- res_df %>%
               values_from = "point") %>%
   mutate(Model = recode(Model, 
                         "ISEMP" = "STADEM")) %>%
+  rowwise() %>%
   mutate(se = (uppCI - lowCI) / (2 * qnorm(0.975)),
          cv = se / est,
          bias = est - Truth,
          rel_bias = bias / Truth,
-         MSE = se^2 + bias^2,
+         MSE = mean((bias)^2),
          inCI = ifelse(inCI == 1, T, ifelse(inCI == 0, F, NA)),
          Window = ifelse(grepl("H",Scenario),"Window_Err_High",
                          ifelse(grepl("L",Scenario),"Window_Err_Low","No Window Error")),
@@ -232,51 +233,65 @@ rate_comp = map_df(lgr_res,
 
 # Introduction
 
-Fish escapement often refers to the number of adults that survive juvenile and subadult rearing, escape harvest and return to their natal habitat to potentially spawn (e.g. @Bue1998). For anadromous fishes, escapement is often estimated at a fixed location in a river system prior to fish reaching their spawning area. Escapement estimates facilitate effective fisheries management, and particularly, estimates of escapement for component groups (e.g., by stock, population, age, origin [wild, hatchery]; @hess2014monitoring; @Steinhorst2017; @Camacho2017) provide valuable information that fisheries managers use to achieve sustainable harvest, while protecting small and vulnerable populations. Accurate escapement estimates are increasingly important for depleted populations as they inform status metrics [@mcelhany2000viable], and facilitate assessments of population viability and extinction risk [@nwfsc2015; @williams2016viability] and climate change vulnerability [@crozier2019climate].
+Fish escapement often refers to the number of adults that survive juvenile and subadult rearing, escape harvest and return to their natal habitat to potentially spawn (e.g. @Bue1998). For anadromous fishes, escapement is often estimated at a fixed location in a river system prior to fish reaching their spawning area. Escapement estimates facilitate effective fisheries management, and particularly, estimates of escapement for component groups (e.g., by stock, population, age, origin [wild, hatchery]; @hess2014monitoring; @Steinhorst2017; @Camacho2018) provide valuable information that fisheries managers use to achieve sustainable harvest, while protecting small and vulnerable populations. Accurate escapement estimates are increasingly important for depleted populations as they inform status metrics [@mcelhany2000viable] and facilitate assessments of population viability, extinction risk [@nwfsc2015; @williams2016viability] and climate change vulnerability [@crozier2019climate].
 
 Populations of Chinook Salmon *Oncorhynchus tshawytscha* and steelhead trout *O. mykiss* in the Snake River basin of Pacific Northwest, USA, are depleted following decades of substantial harvest and anthropogenic changes to their migration corridor (e.g., construction of hydroelectric dams on the Snake and Columbia rivers) and tributary habitats [@nehlsen1991pacific; @mcclure2003large; @nwfsc2015]. As a result, Snake River spring-summer run Chinook Salmon (hereafter Chinook Salmon) were classified as threatened in 1992 under the Endangered Species Act (ESA; Federal Registry Notice 57 FR 14653), and Snake River summer-run steelhead trout (hereafter steelhead) were listed as threatened five years later (Federal Registry Notice 62 FR 43937). Snake River Chinook Salmon and steelhead have substantial cultural, recreational, commercial and subsistence value both within the Snake River basin as well as in downstream corridors (i.e., Columbia River) and ocean fisheries. The aggregate escapement of Snake River Chinook Salmon and steelhead populations, with the exception of Tucannon River, is monitored at Lower Granite Dam located in southeast Washington; the final dam on the Snake River that returning adults must pass prior to heading to tributary spawning locations. Many fisheries management and conservation actions are made based on estimates of escapement at Lower Granite Dam parsed by species and origin [@NMFS2019BiOp; @NFSC2015; @NPCC2014]. Additionally, harvest openings and closures, both upstream in Snake River fisheries and downstream in mainstem Snake and Columbia rivers fisheries, are predicated on escapements at Lower Granite Dam. 
 
-Chinook Salmon and steelhead returning to a majority of populations in the Snake River must ascend a fish ladder on Lower Granite Dam before migrating to their natal tributary spawning locations. Fish management agencies previously used counts of fish, by species, passing an observation window within the fish ladder as a census of fish escaping past the dam. For both species, total escapement was then parsed into groups (e.g., wild, hatchery) using observed marks and genetic data from a sample of fish captured at an adult trap located on the fish ladder upstream of the observation window [@Camacho2017; @Steinhorst2017; @Steele2019]. Window counts as a census proved beneficial as being an easy, straight-forward method that was ascertained in near real-time. Moreover, downriver fisheries management arenas have used window counts at lower-river dams as escapement estimates for the past several years, and consistency in methods is often desirable for management decision making [@WDFW2019]. 
+The majority of Chinook Salmon and steelhead returning to the Snake River must ascend a fish ladder on Lower Granite Dam before migrating to their natal tributary spawning locations. Fish management agencies previously used counts of fish, by species, passing an observation window within the fish ladder as a census of fish escaping past the dam. For both species, total escapement was then parsed into groups (e.g., wild, hatchery) using observed marks and genetic data from a sample of fish captured at an adult trap located on the fish ladder upstream of the observation window [@Camacho2018; @Steinhorst2017; @Steele2019]. Treating window counts as a census proved beneficial as being an easy, straight-forward method that was ascertained in near real-time. Moreover, downriver fisheries management arenas have used window counts at lower-river dams as escapement estimates for the past several years, and consistency in methods is often desirable for management decision making [@WDFW2019]. 
 
-Using window counts, however, as a census of Chinook Salmon and steelhead passing Lower Granite Dam can be problematic as it avoids multiple sources of uncertainty and disregards known biological processes. First, live (i.e., in-person) window counts only occur from April through October each year. Additionally, live window counts only occur for 16-hours each day, and fish counters working at the observation window look directly into the fish ladders to identify and count all passing fish, by species, for 50 minutes of each hour. Counts are then expanded to provide an estimate for the entire hour [@USACE2015]. From November through March, the remainder of the year, video tape fish counting is used and only occurs for 10 hours each day; fish counters then read the video tapes and submit daily fish counts [@Hatch1994]. Typically, the observational error rates of live and video window counts are unknown, and sampling error rates are ignored. Additionally, two biological processes are unaccounted for: 1) fish that cross the dam during the 8-hours when the window is closed for counting (i.e., nighttime passage) which may result in an underestimate of escapement, and 2) fish that migrate through the ladder and past the dam may fallback over the dam (e.g., over spillway, through navigation locks), and later, may or may not re-ascend the fish ladder again [@Boggs2004]. Both fallback with no re-ascension and fallback with re-ascension potentially result in an overestimate of escapement [@Dauble2000]. Previously, it was assumed that nighttime passage rates and fallback/re-ascension rates canceled each other out resulting in window counts providing an unbiased estimate of escapement [@Camacho2017].
+However, using window counts as a census of Chinook Salmon and steelhead passing Lower Granite Dam can be problematic as it fails to account for multiple sources of uncertainty and disregards known biological processes. In-person window counts where observers look directly into the fish ladders to identify and count all passing fish, by species, occur for 50 minutes per hour, 16 hours a day from April through October (which corresponds with peak run timing for several species). Counts are then expanded to provide an estimate for the entire hour [@USACE2015]. For the remainder of the year (November through March), fish passage is video-taped for 10 hours each day; fish counters then read the video tapes and submit daily fish counts. Typically, the observational error rates of live and video window counts are unknown, and sampling error rates are ignored. @Hatch1994 conducted a study of the counting system at Lower Granite dam in 1992, and found that Chinook Salmon were undercounted at the window by in-person window counters compared to video counts. There was a significant difference between daily standard counts (16 or 10 hours per day) and daily 24-hour video counts for both Chinook Salmon and steelhead, accounted for by estimates of passage rates while the counting window is closed of 3.5% (Chinook Salmon) and 6.6% (steelhead). They also found some species misidentification issues, which could result in either under- or over-counting of a particular species. While that study identified potential issues with the current window counting procedure, it was only conducted in a single year, nearly 30 years ago, at a time when Chinook Salmon and steelhead total returns were lower than the past decade. 
 
-In this study, we describe a novel method to estimate aggregate and group escapements which incorporate all sources of known uncertainty and demonstrate that the estimation method is essentially unbiased, thus better informing conservation and management decision making. We also show that observed nighttime passage and fallback/re-ascension rates are typically unequal. Our method for estimating escapement, by species, past Lower Granite Dam incorporates window counts, data from the adult fish trap, and observations of PIT tagged fish in the adult ladder to explicitly model nighttime passage, re-ascension, and error from both window and trap estimates using a state-space approach [@royle2008hierarchical]. To meet desired management and conservation objectives, modeled escapement includes estimates of uncertainty and is parsed into weekly strata. Further, total and weekly estimates are parsed into three origin groups: wild, hatchery, and hatchery no-clip. Estimates of escapement account for fish that migrate through the ladder at night outside of observation hours and account for fish that may ascend the ladder multiple times due to fallback and re-ascension. Our model is implemented in the **ST**ate-space **A**dult **D**am **E**scapement **M**odel (STADEM) package for the statistical software R [@R-Core-Team2020], and is available for downloaded at [https://github.com/KevinSee/STADEM](https://github.com/KevinSee/STADEM). To validate the STADEM results, we simulated 12 scenarios with varying trapping rates, fallback and re-ascension rates, nighttime passage rates, and window count error rates. We then applied this model to Chinook Salmon and steelhead returns at Lower Granite dam for spawn years 2010 - 2019. The STADEM model combines multiple imperfect sources of data to reduce bias in escapement estimates and provides improved estimates of uncertainty.
+Besides potential errors in the window counts, two biological processes are unaccounted for: 1) fish that cross the dam during the 8+ hours when the window is closed for counting (i.e., nighttime passage) which may result in an underestimate of escapement, and 2) fish that migrate through the ladder and past the dam may fallback over the dam (e.g., over spillway, through navigation locks), and later, may or may not re-ascend the fish ladder again [@Boggs2004]. Both fallback with and without re-ascension potentially result in an overestimate of escapement [@Dauble2000]. Previously, it was assumed that nighttime passage rates and fallback/re-ascension rates canceled each other out resulting in window counts providing an unbiased estimate of escapement [@Camacho2018].
+
+<!-- John Hargrove says: You mention in the abstract uncertainty in the trap rate as a source of error. This may be a good place to identify what error is and how it likely affects estimates of escapement.
+
+I don't know that it's appropriate to bring that up here, since the trap rate has not been previously used to estimate escapement at all, and has been irrelevant for previous analyses.-->
+
+In this study, we describe a novel method to estimate aggregate and group escapements which incorporate all sources of known uncertainty and demonstrate that the estimation method is essentially unbiased, thus better informing conservation and management decision making. We also show that observed nighttime passage and fallback/re-ascension rates are typically unequal. Our method for estimating escapement, by species, past Lower Granite Dam incorporates window counts, data from the adult fish trap, and observations of fish previously tagged with passive integrated transponder (PIT) tags in the adult ladder to explicitly model nighttime passage, re-ascension, and error from both window and trap estimates using a state-space approach [@royle2008hierarchical]. To meet desired management and conservation objectives, modeled escapement includes estimates of uncertainty and is parsed into weekly strata. Further, total and weekly estimates are parsed into three origin groups: wild fish, hatchery fish with a clipped adipose fin, and unclipped hatchery fish. Estimates of escapement account for fish that migrate through the ladder at night outside of observation hours (nighttime passage) and account for fish that may ascend the ladder multiple times due to fallback and re-ascension. Our model is implemented in the **ST**ate-space **A**dult **D**am **E**scapement **M**odel (STADEM) package for the statistical software R [@R-Core-Team2020], and is available for downloaded at [https://github.com/KevinSee/STADEM](https://github.com/KevinSee/STADEM). To validate the STADEM results, we simulated 12 scenarios with varying trapping rates, fallback and re-ascension rates, nighttime passage rates, and window count error rates. We then applied this model to Chinook Salmon and steelhead returns at Lower Granite dam for spawn years 2010 - 2019. The STADEM model combines multiple imperfect sources of data to reduce bias in escapement estimates and provides improved estimates of uncertainty.
 
 # Methods
 
 ## Data Requirements
 
-We used STADEM and three sources of data to estimate Chinook Salmon and steelhead escapement at Lower Granite Dam from 2010-2019. Data sources included 1) counts of fish migrating past the observation window located on the adult fish ladder at Lower Granite, 2) information from adults captured at a fish trap located in the fish ladder, and 3) observations of previously PIT tagged fish detected in the adult fish ladder. Below, we describe each of the data sources in more detail as they pertain to Lower Granite Dam; knowing, similar data could likely be obtained from other fish passage facilities.
+We used STADEM and three sources of data to estimate Chinook Salmon and steelhead escapement at Lower Granite Dam from 2010-2019. Data sources included 1) counts of fish migrating past the observation window located on the adult fish ladder at Lower Granite, 2) information from adults captured at a fish trap located in the fish ladder, and 3) observations of fish PIT tagged before they reached Lower Granite Dam detected in the adult fish ladder. Below, we describe each of the data sources in more detail as they pertain to Lower Granite Dam; knowing, similar data could likely be obtained from other fish passage facilities.
 
 ### Window Counts
 
-Daily counts of adult Chinook Salmon and steelhead passing an observation window located on the Lower Granite Dam fish ladder were the first source of data. Daily counts were made and provided by the US Army Corps of Engineers, and when summed, provide an estimate of the number of fish ascending and passing (i.e., escapement) Lower Granite Dam each season. Window counts were made for each species using video monitoring and direct in-person visual monitoring during daytime hours [@Hatch1994]. Video monitoring occurred during the beginning and tail ends of the adult runs (March 1 – March 31 and November 1 – December) for 10 hours per day (0600 – 1600 hours). Direct visual monitoring occurred during peak run times (April 1 – October 31) for 16 hours per day (0400 – 2000 hours) [@USACE2015]. During direct visual monitoring, observers recorded each adult (≥ 30cm), by species, passing the window for 50 minutes of each hour of operation. Salmonids under 30cm in length were not identified to species. The sum of the daily 50-minute counts were then multiplied by 1.2 to account for the 10 minutes when fish were not counted. Daytime window counts were not expanded for fish that may have ascended the ladder outside of operational hours (i.e., nighttime) [@USACE2015]. Window counts were accessed through the Columbia Basin Research Data Access in Real Time (DART) website, [www.cbr.washington.edu/dart/query/adult_daily](www.cbr.washington.edu/dart/query/adult_daily), using their window count query. Counts were provided for each day the fish ladder was open to passage. Although window counts were assumed to be a census of every fish passing Lower Granite Dam, corrections were not applied for nighttime passage or re-ascending fish. Further, there was no estimation of daily or seasonal observation or sampling error.
+Daily counts of adult Chinook Salmon and steelhead passing an observation window located on the Lower Granite Dam fish ladder were the first source of data. Daily counts were made and provided by the US Army Corps of Engineers, and when summed, provide an estimate of the number of fish ascending and passing Lower Granite Dam each season. Window counts were made for each species using video monitoring and direct in-person visual monitoring during daytime hours [@Hatch1994]. Video monitoring occurred during the beginning and tail ends of the adult runs (March 1 – March 31 and November 1 – December) for 10 hours per day (0600 – 1600 hours). Direct visual monitoring occurred during peak run times (April 1 – October 31) for 16 hours per day (0400 – 2000 hours) [@USACE2015]. During direct visual monitoring, observers recorded each adult (≥ 30cm), by species, passing the window for 50 minutes of each hour of operation. Salmonids under 30cm in length were not identified to species. The sum of the daily 50-minute counts were then multiplied by 1.2 to account for the 10 minutes when fish were not counted. Daytime window counts were not expanded for fish that may have ascended the ladder outside of operational hours (i.e., nighttime passage) [@USACE2015]. Window counts were accessed through the Columbia Basin Research Data Access in Real Time (DART) website, [www.cbr.washington.edu/dart/query/adult_daily](www.cbr.washington.edu/dart/query/adult_daily), using their window count query. Counts were provided for each day the fish ladder was open to passage. Although window counts were assumed to be a census of every fish passing Lower Granite Dam, corrections were not applied for nighttime passage or re-ascending fish. Further, there was no estimation of daily or seasonal observation or sampling error.
 
 ### Adult Fish Trap Data
 
-The second source of data came from a sample of fish collected in the adult trap as they migrated past Lower Granite Dam [@Ogden2016b]. The trap, also located within the adult fish ladder and upstream of the observation window, provided biological data (e.g., origin [wild, hatchery], genetic stock, length, age, sex) for captured adults that allowed decomposition of the escapement into specific groups (e.g., @Camacho2017, @Steinhorst2017). The trap was operational for 24 hours per day, and randomly sampled the daily run by opening four times per hour for a length of time determined by a set daily trapping rate. The trap rate was determined by a committee of collaborating management agencies with a goal of capturing a target number of wild fish, but also balancing fish handling concerns. Trap sample rates were typically 10-25%, but fluctuated throughout the season due to high water temperatures, decreased flows, trap malfunctions and/or closures, fish handling logistics, in-season forecast adjustments, etc. 
+The second source of data came from a sample of fish collected in the adult trap as they migrated past Lower Granite Dam [@Ogden2016b]. The trap, also located within the adult fish ladder and upstream of the observation window, provided biological data (e.g., origin [wild, hatchery], genetic stock, length, age, sex) for captured adults that allowed decomposition of the escapement into specific groups (e.g., @Camacho2018, @Steinhorst2017). The trap was operational for 24 hours per day, and randomly sampled the daily run by opening four times per hour for a length of time determined by a set daily trapping rate. The trap rate was determined by a committee of collaborating management agencies with a goal of capturing a target number of wild fish, but also balancing fish handling concerns. Trap sample rates were typically 10-25%, but fluctuated throughout the season due to high water temperatures, decreased flows, trap malfunctions and/or closures, fish handling logistics, in-season forecast adjustments, etc. 
 
-All captured fish were anesthetized, identified to species, examined for existing marks/tags, and measured for fork length. For adipose-intact (unclipped) adults, which includes wild and hatchery-no clip individuals, some portion or all of fish trapped had scale and genetic tissue samples taken. Scale samples were used to estimate age [@Wright2015] and genetic tissue samples were used to determine sex [@Campbell2012a] and estimate the origin of wild fish via genetic stock identification (e.g., @Hargrove2019). Prior to 2013, only fish determined to be wild in origin at the trap were sampled for scale and genetics. Starting in 2013, every unclipped Chinook Salmon and steelhead trapped at LGR was genotyped to simplify collaborative logistics and better estimate the proportion of phenotypically wild fish of truly hatchery origin. @Camacho2017 provide further details on trap sample rates and valid sample selection. Prior to release, all non-PIT tagged fish with an intact adipose fin (i.e., putatively wild) received a PIT tag. Final determination of wild, hatchery, and hatchery no-clip origins were assigned using a post-hoc analysis of marks and tags, including genetic parentage-based tags [@Steele2013; @Steele2019]. Data from the adult trap were collected and managed by multiple agencies and were made available by the Idaho Department of Fish and Game [@Camacho2017].
+<!-- John Hargrove: Are there many more items to list – if not, then consider writing them out rather than use etc. -->
+
+All captured fish were anesthetized, identified to species, examined for existing marks/tags, measured for fork length and visually identified as wild or hatchery. The most widely usee marking of hatchery fish is the adipose fin clip, although coded wire tags are used in less than 10% of the hatchery releases. Some subset of hatchery fish are either intentionally or unintentionally released without an adipose fin clip, and these are referred to as unclipped hatchery fish, or hatchery no-clip (HNC). For adipose-intact (unclipped) adults, which includes wild and hatchery no-clip individuals, either a portion or all of fish trapped (depending on the year) had scale and genetic tissue samples taken. Scale samples were used to estimate age [@Wright2015] and genetic tissue samples were used to determine sex [@Campbell2012a] and estimate the origin of wild fish via genetic stock identification (e.g., @Hargrove2019). Prior to 2013, only fish determined to be wild in origin at the trap were sampled for scale and genetics. Starting in 2013, every unclipped Chinook Salmon and steelhead trapped at LGR was genotyped to simplify collaborative logistics and better estimate the proportion of phenotypically wild fish of truly hatchery origin. @Camacho2018 provide further details on trap sample rates and valid sample selection. Prior to release, all non-PIT tagged fish with an intact adipose fin (i.e., putatively wild) received a PIT tag. Final determination of wild, clipped hatchery, or unclipped hatchery origins were assigned using a post-hoc analysis of marks and tags, including parentage-based tqagging [@Steele2013; @Steele2019]. Data from the adult trap were collected and managed by multiple agencies and were made available by the Idaho Department of Fish and Game [@Camacho2018].
 
 ### PIT tag Data
 
-The last source of data was observations of PIT tagged adult Chinook Salmon and steelhead at detection sites located in the Lower Granite Dam fish ladder. These observations provide estimates of 1) a trapping rate, 2) the proportion of fish passing during nighttime hours, and 3) the proportion of fish that ascend the fish ladder multiple times (i.e., the re-ascension rate). Detections used in the model include all fish that were previously PIT tagged as juveniles or adults prior to reaching Lower Granite Dam (i.e., does not include newly tagged adults at the dam) and detected at adult detection sites in the dam passage system. PIT tag data was provided through DART and the adult ladder PIT tag query; [http://www.cbr.washington.edu/dart/query/pitadult_obsyr_detail](http://www.cbr.washington.edu/dart/query/pitadult_obsyr_detail).
+The last source of data was observations of PIT tagged adult Chinook Salmon and steelhead at detection sites located in the Lower Granite Dam fish ladder. These observations provide estimates of 1) a trapping rate, 2) the nighttime passage rate, and 3) the re-ascension rate. Detections used in the model include all fish that were previously PIT tagged as juveniles or adults prior to reaching Lower Granite Dam (i.e., does not include newly tagged adults at the dam) and detected at adult detection sites in the dam passage system. PIT tag data was provided through DART and the adult ladder PIT tag query; [http://www.cbr.washington.edu/dart/query/pitadult_obsyr_detail](http://www.cbr.washington.edu/dart/query/pitadult_obsyr_detail).
 
-A trap rate estimate was derived using Lincoln-Peterson mark-recapture methods and PIT tag observations of both Chinook Salmon and steelhead at Lower Granite Dam adult detection sites. The "mark" group included all tags (of both species) detected in the adult trap and the "capture" group included tags observed to cross the weir at the upstream end of the fish ladder as adults left the passage system. The proportion of the tags detected at the weir that were also caught in the trap each week was assumed to reflect the same trap rate that all adults of the target species experienced as they crossed the ladder. The sample size of previously tagged fish detected at Lower Granite Dam influences the uncertainty in that trap rate, which is also informed by the number of adults caught in the trap and the window counts. We want to estimate the "true" trapping rate because the set trapping rate (i.e. the recorded time that the trap is open to trap adults) does not always reflect the true proportion of fish that are captured in the trap due to various issues including trap malfunctions, separation-by-code fish opening the trap more frequently than expected, and process error, among others. Therefore, we use the mark-recapture estimate of the trap rate to estimate a true trapping rate.  
+A trap rate estimate was derived using Lincoln-Peterson mark-recapture methods and PIT tag observations of both Chinook Salmon and steelhead at Lower Granite Dam adult detection sites. The "mark" group included all tags (of both species) detected in the adult trap and the "capture" group included tags observed to cross the weir at the upstream end of the fish ladder as adults left the passage system. The proportion of the tags detected at the weir that were also caught in the trap each week was assumed to reflect the same trap rate that all adults of the target species experienced as they crossed the ladder. The sample size of previously tagged fish detected at Lower Granite Dam influences the uncertainty in that trap rate, which is also informed by the number of adults caught in the trap and the window counts. The set trapping rate (i.e. the recorded time that the trap is open to trap adults) does not always reflect the true proportion of fish that are captured in the trap due to various issues including trap malfunctions, separation-by-code fish opening the trap more frequently than expected, and process error, among others. Therefore, we use the mark-recapture approach to estimate a "true" trapping rate.
 
-The nighttime passage rate was based on the count of tags that migrated through the fish ladder during non-window observation hours and the total number of tags passing the fish ladder, and was estimated on a weekly basis. The re-ascension rate incorporated the count of tags observed passing the upstream most detection sites in the adult fish ladder (i.e., passing the dam) and later detected re-entering the downstream end of the fish ladder at a later time andthe total number of tags leaving the fish ladder. Previously, we looked for differences in nighttime passage and re-ascension rates estimated using wild fish only, versus combining hatchery and wild fish together, and found no difference. Therefore, we combine wild and hatchery PIT tagged fish observations to estimate common nighttime passage and re-ascension rates to increase sample sizes.
+We used PIT tag data to estimate nighttime passage and re-ascension rates, using the total number of tags passing the fish ladder for both, and estimating both on a weekly basis. The nighttime passage rate was based on the count of PIT tags that migrated through the fish ladder during non-window observation hours and the total number of tags passing the fish ladder. The re-ascension rate incorporated the count of tags observed passing the upstream most detection sites in the adult fish ladder (i.e., passing the dam) and later detected re-entering the downstream end of the fish ladder at a later time and the total number of tags leaving the fish ladder. Previously, we looked for differences in nighttime passage and re-ascension rates estimated using wild fish only, versus combining hatchery and wild fish together, and found no difference. Therefore, we combine wild and hatchery PIT tagged fish observations to estimate common nighttime passage and re-ascension rates to increase sample sizes.
 
 ## Model Framework
 
-We estimated the total number of fish crossing the dam each week, based on the window counts and the total fish passing the adult trap, while also accounting for nighttime passage and fallback/re-ascension rates using a state-space modeling approach [@royle2008hierarchical] implemented in the STADEM package for the R statistical software [@R-Core-Team2020]. We assumed that the window counts and the estimates from the trap (fish in the trap divided by trap rate that week) were generated by processes with observation error. In the case of the trap, for example, we assumed there was sampling variation and uncertainty around our estimates of the true unknown trap rate. STADEM further accounted for the proportion of fish that ascended the ladder while the counting window was closed (i.e., night), as well as for fish potentially double-counted (or more) after falling back below the dam and later re-ascending the fish ladder. Finally, adult sampling data from the trap (wild, hatchery, hatchery no-clip) were used to partition the total escapement estimate by origin (Figure \@ref(fig:stadem-examp-fig)). Additional model details can be found in [Appendix A](#append1). The STADEM package is available from the primary author at [https://github.com/KevinSee/STADEM](https://github.com/KevinSee/STADEM), and requires the use of the JAGS software [@R-rjags] for Bayesian inference. 
+We estimated the total number of fish crossing the dam each week, based on the window counts and the total fish passing the adult trap, while also accounting for nighttime passage and fallback/re-ascension rates using a state-space modeling approach [@royle2008hierarchical] implemented in the STADEM package for the R statistical software [@R-Core-Team2020]. We assumed that the window counts and the estimates from the trap (fish in the trap divided by trap rate that week) were generated by processes with observation error. In the case of the trap, for example, we assumed there was sampling variation and uncertainty around our estimates of the true unknown trap rate. STADEM adjusted the window counts for the nighttime passage rate, and both window and trap estimates for the re-ascension rate to estimate the number of unique fish that crossed teh dam. Finally, adult sampling data from the trap (wild, hatchery, hatchery no-clip) were used to partition the total escapement estimate by origin (Figure \@ref(fig:stadem-examp-fig)). Additional model details can be found in [Appendix A](#append1). The STADEM package is available from the primary author at [https://github.com/KevinSee/STADEM](https://github.com/KevinSee/STADEM), and requires the use of the JAGS software [@R-rjags] for Bayesian inference. 
 
 ## Simulations
 
 We tested the STADEM model on a variety of simulated data sets. These simulated data sets contained a fixed number of unique adult fish of known origin crossing a dam, from a total of 25 fictional populations with differential run-timing (i.e., date of passage at Lower Granite Dam). Each simulated fish was given a date of ladder ascension, based on its population and the range of observed run timing for that population. Each fish was also simulated to cross the dam either while the window was open for counting, or not, and was given the chance to be "caught" in the simulated fish trap given the week when it ascended the dam, and the known trap rate that week. Fallback and re-ascension behavior was also simulated, with each fish having the possibility of falling back and re-ascending the ladder up to three times.
 
-Our objective was to examine STADEM model estimates of origin-specific (wild, hatchery, hatchery no-clip) escapement from the combinations of two separate trapping rates, two fallback/re-ascension and nighttime passage combinations, and three window count error rates; resulting in twelve different scenarios (Table \@ref(tab:lgr-sim-tab)). The simulation parameters such as proportion of origin, run-timing, nighttime passage rates, fallback and re-ascension rates and trap rates were based on observed values at Lower Granite Dam between 2010-2015. Further details about simulation procedures can be found in [Appendix B](#append2).
+Our objective was to examine STADEM model estimates of origin-specific (wild, hatchery, hatchery no-clip) escapement from the combinations of two trap rate scenarios (constant and shut down for 3 weeks), two fallback/re-ascension and nighttime passage combinations, and three window count error rates; resulting in twelve different scenarios (Table \@ref(tab:lgr-sim-tab)). The simulation parameters such as proportion of origin, run-timing, nighttime passage rates, fallback and re-ascension rates and trap rates were based on observed values at Lower Granite Dam between 2010-2015. We generated 99 simulations for each scenario, and ran STADEM on each one. Further details about simulation procedures can be found in [Appendix B](#append2).
+
+We grouped the simulation results by origin (wild, hatchery clipped and hatchery no-clip) and evaluated them by several measures. Relative bias is the difference between the simulated "truth" and the STADEM estimate, divided by the simulated "truth". We estimated the precision by examining the average coefficient of variation (CV) of the estimates. We calculated the root mean squared error (RMSE) as the square root of the mean of the squared bias in the estimate. Finally, we evaluated coverage probabilities by determining what proportion of the model results generated an estimated 95% credible interval that contained the simulated true value. 
 
 ## Lower Granite Application
+
+<!-- John Hargrove: While I think this is a noteworthy application of STADEM, as written there is no justification of why you did this or how these values compare to other estimates made at LGR. In other words, were you interested in trends in abundance? Estimated coefficients of variation? Performance relative to another estimation procedure? 
+
+We could do a comparison with the total window counts, or a comparison with SCOBI results, but I don't know that either is terribly relevant. SCOBI has been replaced by STADEM, I think. Comparing window counts with STADEM estimates of total unique fish, we could summarise the RMSE (~ 5000 for Chinook, ~10,000 for steelhead) or the normalized RMSE (~ 6% for Chinook, ! 7% for steelhead). Seem worth doing? Either that, or just explicitly state that we're doing a case study of STADEM at Lower Granite? -->
 
 Finally, we applied STADEM to data from Lower Granite Dam for Chinook Salmon and steelhead returning to the Snake River during spawn years 2010 to 2019. Window counts for both species were accessed from DART via functions within STADEM. For Chinook Salmon, a spawn year refers to adults that migrate past the dam prior to August 17 each year and spawn that late summer and fall. For steelhead, the spawn year is defined as steelhead that migrate past Lower Granite Dam starting July 1 the previous year and prior to June 30 of the given year (e.g., spawn year 2017 steelhead migrate past Lower Granite between July 1, 2016 and June 30, 2017). Data from the adult trap was made available by Idaho Department of Fish and Game, and adult PIT tag detection data within the fish passage ladder at Lower Granite Dam was accessed from the PTAGIS regional database ([https://www.ptagis.org/](https://www.ptagis.org/)).
 
@@ -284,27 +299,37 @@ Finally, we applied STADEM to data from Lower Granite Dam for Chinook Salmon and
 
 ## Simulations
 
-Simulation results of observed bias, sampling variation, precision, root mean squared deviation (RMSD), and coverage probabilities were qualitatively similar for the hatchery (N = 70,000) and hatchery no-clip (N = 5,000) origin groups as observed in the wild origin group (N = 25,000) comparisons. As such, only diagnostic measures of Lower Granite Dam model fits to a medium sized escapement level (e.g., wild origin escapement) are presented.
+The STADEM performance evaluation statistics were very similar for hatchery clipped (N = 70,000), hatchery no-clip (N = 5,000) and wild fish (N = 25,000). In the interest of brevity, we only present the results from wild fish, which corresponds to a medium sized escapement level. 
 
-STADEM results were very similar across all scenarios (Figure \@ref(fig:rel-bias-lgd)). Estimates were unbiased, with an average relative bias of 0.2–0.3%. The CV of the estimates averaged 2.0–3.0%, with coverage probabilities that always exceeded 95%. We calculated RMSD as the square root of the sum of the variance of the estimate and the squared expected bias, which accounts for the size of the uncertainty in the estimator as well as its bias. The RMSD was near 500 for each scenario, representing an estimate within 2% of the true value (Table \@ref(tab:summ-tab)).
+STADEM results were very similar across all scenarios (Figure \@ref(fig:rel-bias-lgd)). Estimates were unbiased, with an average relative bias of 0.2–0.3%. The CV of the estimates averaged 2.0–3.0%, with higher CV's being associated with scenarios when the trap was closed for 3 weeks. The coverage probabilities always exceeded 95% across all scenarios. The RMSE was near 500 for each scenario, representing an estimate within 2% of the true value, demonstrating the accuracy of STADEM (Table \@ref(tab:summ-tab)).
 
 ## Lower Granite Application
 
-We applied STADEM to data from Lower Granite Dam for Chinook Salmon and steelhead for spawn years 2010–2019. Estimates of total escapement, as well as estimates of wild, hatchery, and hatchery no-clip estimates are presented in Table \@ref(tab:lgr-tab). Coefficients of variation ranged from 2.5-7.1% for wild fish, 2.3-5.1% for clipped hatchery fish, 3.4-8.8% for hatchery no-clip fish and 2.2-4.7% for total unique fish past Lower Granite Dam.   
+We applied STADEM to data from Lower Granite Dam for Chinook Salmon and steelhead for spawn years 2010–2019. Estimates of total escapement, as well as estimates of wild, hatchery clipped, and hatchery no-clip estimates are presented in Table \@ref(tab:lgr-tab). Estimates of total unique fish escaping past Lower Granite Dam were sometimes higher and sometimes lower than the raw window counts, indicating that the relative strength of nighttime passage and re-ascension rates differed across years. Coefficients of variation ranged from 2.5-7.1% for wild fish, 2.3-5.1% for clipped hatchery fish, 3.4-8.8% for hatchery no-clip fish and 2.2-4.7% for total unique fish past Lower Granite Dam.   
 
-Weekly estimates of total escapement over Lower Granite Dam tracked the window counts and trap estimates (Figure \@ref(fig:jags-fit-fig)). STADEM point estimates were often between estimates based on window counts, and those based on the number of fish caught in the adult trap. However, when very few fish were caught in the trap, or there was more uncertainty about the trap rate that week, STADEM estimates tracked the window counts more closely, as seen in the second week of July 2014, in Figure \@ref(fig:jags-fit-fig). That year also shows the utility of STADEM in dealing with missing data, as the trap was shut down for several weeks in July and August.
+Weekly estimates of total escapement over Lower Granite Dam tracked the window counts and trap estimates (One example: Figure \@ref(fig:jags-fit-fig)). STADEM point estimates were often between estimates based on window counts, and those based on the number of fish caught in the adult trap. However, for weeks when very few fish were caught in the trap, or there was more uncertainty about the trap rate, STADEM estimates tracked the window counts more closely, as seen in the second week of July 2014, in Figure \@ref(fig:jags-fit-fig). That year also shows the utility of STADEM in dealing with missing data, as the trap was shut down for several weeks in July and August.
 
-Examining the estimates of nighttime passage and re-ascension rates based on the observed PIT tags crossing over Lower Granite Dam (Figure \@ref(fig:night-reasc-diff-fig)), the two rates did not match up in most cases. In particular, there are several weeks when the window counts are quite high, and the rates differ by as much as 10%. Clearly, those two biological processes do not cancel each other out in nearly all cases, and thus, employing a model that accounts for both will result in more accurate estimates of escapement.
+<!-- John Hargrove: Is there a reason why you only present a singular year  in Figure 3? I acknowledge that having 10 years of data may make it unreadable – but perhaps justify why 2014 was selected or include all 10 years as separate plots using facet_wrap in ggplot. 
+
+I think showing 10 time series plots is unnecessary (Table 3 shows how estimates match up with window counts). I think 2014 is a nice illustration of general agreement, with some examples of how STADEM doesn't always track the trap estimate, and how it deals with missing data. Do we need to make that more clear, or leave it as is?-->
+
+Examining the weekly estimates of nighttime passage and re-ascension rates at Lower Granite Dam (Figure \@ref(fig:night-reasc-diff-fig)), the two rates did not match up in most weeks. In particular, there are several weeks when the window counts are quite high, and the rates differ by as much as 10%. When nighttime passage is larger than re-ascension, the window counts will be biased low, and vice versa. 
 
 # Discussion
 
 We have presented a novel method for estimating adult salmonid escapement past a large hydroelectric facility (e.g., Lower Granite Dam) that incorporates data from window counts, a fish trap, and observations of PIT tagged fish in the adult passage ladder. Our model explicitly models nighttime passage, re-ascension, and potential error in both window and trap estimates. In doing so, we demonstrated that at Lower Granite Dam, nighttime passage and re-ascension rates do not always offset each other, and assuming they do will lead to biased escapement estimates in some years. With minor adjustments this modeling framework and the STADEM package could be applied to similar migratory species at Lower Granite Dam (e.g., fall Chinook Salmon, Pacific lamprey *Lampetra tridentata*), or elsewhere; provided a fish passage barrier with a counting mechanism, a trap that can be used to sample a portion of the run, and tag observation or detection infrastructure (e.g., a PIT tag detection array or similar) exists. Our state-space model combined multiple imperfect sources of data to reduce bias in adult escapement estimates and provided more reasonable estimates of uncertainty. Accurate population or stock abundance estimates and uncertainty accounting for observation and process error can be particularly important when estimates are used or leveraged for management and conservation decisions such as population viability analyses.
 
-Combining data from the adult fish trap with live and video window counts provides several benefits. First, it allows us to model observer error in the window counts, which is typically unknown. If estimates rely on window counts alone, quantifying observer error is impossible, and we believe it's prudent to capture and account for known sources of error to minimize management decision risk. Second, by incorporating both sources of information in a state-space framework, STADEM incorporates missing data at either the observation window or adult trap seamlessly. At Lower Granite Dam, the adult trap has been closed for brief or extended periods of time (i.e., days, weeks) intermittently over the past several years, often during peak run times. Trap closures are typically associated with elevated water temperatures resulting in potential fish handling stress and/or trap malfunctions. Given predicted Pacific Northwest climate change scenarios trap closures from high water temperatures may become more commonplace in the future; amplifying the need for a modeling framework that accounts for periods of missing data while still capturing estimate uncertainty. Additionally, having a framework in place that accounts for missing periods of data will allow for increased logistic flexibility if, for example, maintenance or construction is needed at the observational window or adult trap.
+Combining data from the adult fish trap with live and video window counts provides several benefits. First, it allows us to model observer error in the window counts, which is typically unknown. If estimates rely on window counts alone, quantifying observer error is impossible, and we believe it's prudent to capture and account for known sources of error to minimize management decision risk. Second, by incorporating both sources of information in a state-space framework, STADEM incorporates missing data at either the observation window or adult trap seamlessly. At Lower Granite Dam, the adult trap has been closed for brief or extended periods of time (i.e., days, weeks) intermittently over the past several years, often during peak run times. Trap closures are typically associated with elevated water temperatures resulting in potential fish handling stress and/or trap malfunctions. Given predicted Pacific Northwest climate change scenarios [@Zhang2019] trap closures from high water temperatures may become more commonplace in the future; amplifying the need for a modeling framework that accounts for periods of missing data while still capturing estimate uncertainty. Additionally, having a framework in place that accounts for missing periods of data will allow for increased logistic flexibility if, for example, maintenance or construction is needed at the observational window or adult trap.
 
-Although not currently set up for this, STADEM could be modified and run on a weekly basis or in near real-time to provide better in-season estimates for fisheries managers. Currently, the only roadblock to this, at Lower Granite Dam, is the identification of hatchery origin fish from phenotypically wild fish (i.e., hatchery no-clip) using genetic tissue samples [@Steele2013; @Steele2019] collected at the adult trap, which currently is completed post-hoc after the trapping season. The inclusion of genetic information typically results in a reduction in wild escapement estimates and an associated increase in hatchery no-clip escapement. However, if in-season management decisions do not require this correction or could accept the potential bias, origin calls at the trap could be used in-season as a first approximation to escapement. Final post-hoc estimates, parsed by origin, could then be finalized at season’s end. All other data included in this model (e.g., window counts and PIT observations) are otherwise provided in almost real-time by DART. Provided the Lower Granite Dam adult fish trap database was updated and available in near real-time, there are minimal obstacles for adapting the STADEM framework to provide in-season estimates of escapement.
+<!-- John Hargrove on the above paragraph, specifically the sentence about the LGD adult trap having been closed over the last decade: Do you have this data for all spawn years you presented? If so, quantitatively state how common this happens. I believe these data may be presented in Ogden’s reports. Alternatively, Camacho’s reports typically list out open and close dates as well as trap rates for different spawn years. -->
 
-Recently, co-managers in the Snake River basin have adopted the STADEM framework to estimate population escapement of spring/summer Chinook Salmon and steelhead past Lower Granite Dam, and returning to tributary or population specific spawning areas [@iptds2020report; @kinzer2020report]. Estimates of escapement at Lower Granite Dam, by species and origin, including known uncertainty, are available to further parse into sex- or age-structured escapement estimates (e.g., @Camacho2017, @Schrader2013) that are important for fisheries management and productivity monitoring of wild populations. As an example, STADEM is being applied at Lower Granite Dam to estimate the total unique wild fish migrating past the dam. Estimates of fish passing the dam are then combined with estimated movement or transition probabilities based on PIT tag observations at instream PIT tag detection systems throughout the Snake River basin, similar to @waterhouse2020bayesian, to estimate escapement to Snake River populations and locations throughout the basin [@orme2018population]. Combined, escapement estimates from STADEM and movement probability estimates provide abundance estimates to given tributaries or populations that, joined with sex and age data collected at the adult fish trap [@Hargrove2019], provides necessary information to evaluate productivity and population viability for select Snake River Chinook Salmon and steelhead groups [@iptds2020report]. 
+Although not currently set up for this, STADEM could be modified and run on a weekly basis or in near real-time to provide better in-season estimates for fisheries managers. Currently, the only roadblock to this at Lower Granite Dam is the identification of hatchery no-clip fish using genetic tissue samples [@Steele2013; @Steele2019] collected at the adult trap, which currently is completed post-hoc after the trapping season. The inclusion of genetic information typically results in a reduction in wild escapement estimates and an associated increase in hatchery no-clip escapement [@Hargrove2020]. However, if in-season management decisions do not require this correction or could accept the potential bias, origin calls at the trap could be used in-season as a first approximation to escapement. Final post-hoc estimates, parsed by origin, could then be finalized at season’s end. All other data included in this model (e.g., window counts and PIT observations) are otherwise provided in almost real-time by DART. Provided the Lower Granite Dam adult fish trap database was updated and available in near real-time, there are minimal obstacles for adapting the STADEM framework to provide in-season estimates of escapement.
+
+Recently, co-managers in the Snake River basin have adopted the STADEM framework to estimate population escapement of spring/summer Chinook Salmon and steelhead past Lower Granite Dam, and returning to tributary or population specific spawning areas [@IPTDSW2020; @kinzer2020report]. Estimates of escapement at Lower Granite Dam, by species and origin, including known uncertainty, are available to further parse into sex- or age-structured escapement estimates (e.g., @Camacho2018, @Schrader2013) that are important for fisheries management and productivity monitoring of wild populations. As an example, STADEM is being applied at Lower Granite Dam to estimate the total unique wild fish migrating past the dam. Estimates of fish passing the dam are then combined with estimated movement or transition probabilities based on PIT tag observations at instream PIT tag detection systems throughout the Snake River basin, similar to @waterhouse2020bayesian, to estimate escapement to Snake River populations and locations throughout the basin [@orme2018population]. Combined, escapement estimates from STADEM and movement probability estimates provide abundance estimates to given tributaries or populations that, joined with sex and age data collected at the adult fish trap [@Hargrove2019], provides necessary information to evaluate productivity and population viability for select Snake River Chinook Salmon and steelhead groups [@IPTDSW2020]. 
+
+<!-- John Hargrove: Have you considered comparing estimate that you produced  to those that failed to account for fallback/reascension to see how much difference there is? In other words, you could draw estimates from Camacho and Schrader docs and readily compare – may serve to better illustrate your point of the superiority of accounting for these errors relative to less complicated models
+
+I quickly pulled together the estimates from IDFG's latest report, 2010-2018 wild escapement. Their estimates of wild Chinook are about 4% higher than STADEM, and about 3% lower for wild steelhead. So far we've avoided explicitly comparing our results with existing methods in an effort to avoid confrontation. Maybe that's moot if IDFG has started adopting STADEM results, but looks like as of March 2019 they had not. Thoughts?-->
 
 Although STADEM was developed with salmonid escapement at Lower Granite Dam in mind, it could be applied to any migratory fish species at locations with similar monitoring infrastructure. Justification and infrastructure exist for applying a modified STADEM framework for fish passing Bonneville Dam, the lowest dam on the Columbia River, or Priest Rapids Dam in the upper Columbia River. Both locations currently trap a sub-sample of passing Chinook Salmon and/or steelhead for biological information, and use window counts as a surrogate of true escapement. However, each has at least some similar problems to those observed at Lower Granite Dam, such as unaccounted observer and sampling error, nighttime passage, and/or re-ascension. Certainly, estimating an unbiased total return to the entire Columbia River basin (i.e., Bonneville Dam) and Upper Columbia River with uncertainty would benefit managers and decision making.
 
@@ -326,33 +351,35 @@ Funding for this study and development of the STADEM model was partially provide
 ```{r lgr-sim-tab}
 crossing(`Trap rate` = c('0.15', 
                          "0.15 and 0.00 3 weeks"),
-         `Fallback rate` = c(0.06,
+         `Fallback & Re-ascension rate` = c(0.06,
                              0.10),
-         `Re-ascension rate` = 1,
+         # `Re-ascension rate` = 1,
          `Window count error` = factor(c("No Error",
-                                         "10% Error",
-                                         "5% Error"),
+                                         "5% Error",
+                                         "10% Error"),
                                        levels = c("No Error",
-                                                  "10% Error",
-                                                  "5% Error"))) %>%
-  mutate(`Nighttime passage rate` = if_else(`Fallback rate` == 0.06,
+                                                  "5% Error",
+                                                  "10% Error"))) %>%
+  mutate(`Nighttime passage rate` = if_else(`Fallback & Re-ascension rate` == 0.06,
                                             0.06,
                                             0.05)) %>%
   mutate(Scenario = paste(rep(c('Baseline',
                                 "N-R",
                                 "N-R trap down",
                                 "Trap down"),
-                              each = 3),
-                          c("",
-                            "Err H", 
-                            "Err L"))) %>%
+                              each = 3)),
+         Scenario = if_else(`Window count error` == "5% Error",
+                            paste(Scenario, "Err L"),
+                            if_else(`Window count error` == "10% Error",
+                                    paste(Scenario, "Err H"),
+                                    Scenario))) %>%
   select(Scenario, 
-         `Trap rate`:`Re-ascension rate`,
+         `Trap rate`:`Fallback & Re-ascension rate`,
          `Nighttime passage rate`,
          `Window count error`) %>%
   kable(digits = 2,
         booktabs = T,
-        caption = "Summary of simulation scenarios including varying adult trapping, fallback rates, re-ascension, nighttime passage, and window count error rates use to evaluate the performance of STADEM.") %>%
+        caption = "Summary of simulation scenarios including varying adult trapping, fallback and re-ascension rates, nighttime passage, and window count error rates use to evaluate the performance of STADEM.") %>%
   kable_styling()
 
 ```
@@ -368,7 +395,9 @@ sum_tab <- res_long_df %>%
             `Relative bias` = mean(rel_bias),
             SE = sqrt(var(est)),
             `Mean CV` = mean(cv),
-            RMSD = sqrt(var(est) + mean(bias)^2),
+            # RMSD = sqrt(var(est) + mean(bias)^2),
+            RMSE = sqrt(mean(bias^2)),
+            MAE = mean(abs(bias)),
             Coverage = inCI/nsims) %>%
   mutate(Scenario = str_replace_all(Scenario,
                                     "_", " "),
@@ -378,7 +407,9 @@ sum_tab <- res_long_df %>%
   select(Scenario,
          `Relative bias`,
          `Mean CV`,
-         RMSD,
+         # RMSD,
+         RMSE,
+         # MAE,
          Coverage)
 
 # mu_rmse <- sum_tab %>%
@@ -388,7 +419,7 @@ sum_tab <- res_long_df %>%
 sum_tab %>%
   kable(digits = 3,
         booktabs = T,
-        caption = "Summary statistics, including relative bias, mean coefficient of variation (CV), root mean squared deviation (RMSD) and coverage for results from each of the twelve simulation scenarios.") %>%
+        caption = "Summary statistics, including relative bias, mean coefficient of variation (CV), root mean squared error (RMSE) and 95% credible interval coverage for results from each of the twelve simulation scenarios.") %>%
   kable_styling()
 ```
 
@@ -418,11 +449,11 @@ lgr_est %>%
 
 # Figures
 
-```{r stadem-examp-fig, fig.cap = "Schematic of how the STADEM model works. Panel A shows the posterior of the estimate of fish crossing the dam while the window is open (dashed line shows observed window counts). That estimate is divided by the nighttime passage rate (B). The total fish is then discounted by the reascension rate to estimate unique fish (C). Those unique fish are then multiplied by the proportion of wild fish (D), to estimate unique wild fish."}
+```{r stadem-examp-fig, fig.cap = "Schematic of how the STADEM model works. Panel A shows the posterior of the estimate of fish crossing the dam while the window is open (dashed line shows observed window counts). That estimate is divided by the nighttime passage rate (B). The total fish is then discounted by the re-ascension rate to estimate unique fish (C). Those unique fish are then multiplied by the proportion of wild fish (D), to estimate unique wild fish."}
 
 arrow_length = unit(0.15, 'inches')
 arrow_height = 1.05
-my_xlim = c(-3, 7.5)
+my_xlim = c(-4, 7.5)
 my_ylim = c(0.06, 1.1)
 
 
@@ -444,7 +475,17 @@ p1 = ggplot(data.frame(x = c(-5, 8)),
                 args = list(mean = -1, sd = 0.75),
                 aes(color = 'Unique Wild Fish'),
                 geom = 'blank') +
-  scale_color_brewer(palette = 'Set1') +
+  stat_function(fun = dnorm,
+                args = list(mean = -1, sd = 0.75),
+                aes(color = 'Unique Hatchery Fish'),
+                geom = 'blank') +
+  stat_function(fun = dnorm,
+                args = list(mean = -1, sd = 0.75),
+                aes(color = 'Unique HNC Fish'),
+                geom = 'blank') +
+  # scale_color_brewer(palette = 'Set1') +
+  scale_color_brewer(palette = "Spectral") +
+  # scale_color_viridis_d() +
   # scale_color_grey(start = 0.9,
   #                  end = 0.3) +
   geom_vline(xintercept = 4,
@@ -465,7 +506,7 @@ p2 = p1 +
                 args = list(mean = 6, sd = 0.55),
                 aes(color = 'Total Fish'),
                 lwd = 2) +
-  labs(title = 'Including Night Passage')
+  labs(title = 'Nighttime Passage')
 
 p2a = p2 +
   geom_segment(x = 4,
@@ -479,7 +520,7 @@ p3 = p2 +
                 args = list(mean = 5, sd = 0.6),
                 aes(color = 'Unique Fish'),
                 lwd = 2) +
-  labs(title = 'Account for Reascension')
+  labs(title = 'Re-ascension')
 
 p3a = p3 +
   geom_segment(x = 6,
@@ -490,15 +531,23 @@ p3a = p3 +
   
 p4 = p3 +
   stat_function(fun = dnorm,
-                args = list(mean = -1, sd = 0.75),
+                args = list(mean = -1, sd = 0.85),
                 aes(color = 'Unique Wild Fish'),
+                lwd = 2) +
+  stat_function(fun = dnorm,
+                args = list(mean = 1, sd = 0.75),
+                aes(color = 'Unique Hatchery Fish'),
+                lwd = 2) +
+  stat_function(fun = dnorm,
+                args = list(mean = -2, sd = 1.25),
+                aes(color = 'Unique HNC Fish'),
                 lwd = 2) +
   geom_segment(x = 5,
                y = arrow_height,
                xend = -1,
                yend = arrow_height,
                arrow = arrow(length = arrow_length)) +
-  labs(title = 'Proportion Wild')
+  labs(title = 'Origin Proportion')
 
 
 examp_p = ggarrange(p1, p2a, p3a, p4,
@@ -511,18 +560,18 @@ examp_p = ggarrange(p1, p2a, p3a, p4,
 examp_p
 ```
 
-```{r rel-bias-lgd, fig.cap = "Boxplots show relative bias of STADEM estimates for wild escapement across various scenarios. The boxes contain 50% of the simulations, whiskers contain 95% of the simulations, and points are outliers."}
-hdi_box = function(x) {
-  r = c(hdi(x, 0.95), hdi(x, 0.5), median(x))
-  # r = quantile(x, probs = c(0.025, 0.975, 0.25, 0.75, 0.5))
-  names(r) = c('ymin', 'ymax', 'lower', 'upper', 'middle')
-  r
-}
-
-hdi_out = function(x) {
-  subset(x, x < hdi(x, 0.95)[1] | x > hdi(x, 0.95)[2])
-  # subset(x, x < quantile(x, probs = c(0.025)) | x > quantile(x, probs = c(0.975)))
-}
+```{r rel-bias-lgd, fig.cap = "Boxplots of the relative bias of STADEM estimates for wild escapement across various scenarios (See Table 1)."}
+# hdi_box = function(x) {
+#   r = c(hdi(x, 0.95), hdi(x, 0.5), median(x))
+#   # r = quantile(x, probs = c(0.025, 0.975, 0.25, 0.75, 0.5))
+#   names(r) = c('ymin', 'ymax', 'lower', 'upper', 'middle')
+#   r
+# }
+# 
+# hdi_out = function(x) {
+#   subset(x, x < hdi(x, 0.95)[1] | x > hdi(x, 0.95)[2])
+#   # subset(x, x < quantile(x, probs = c(0.025)) | x > quantile(x, probs = c(0.975)))
+# }
 
 rel_bias_p = res_long_df %>%
   filter(grepl('Unique', Variable),
@@ -532,17 +581,16 @@ rel_bias_p = res_long_df %>%
                                Hatchery = 'Unique.Hatch.Fish',
                                HNC = 'Unique.HNC.Fish')) %>%
   mutate(grp = paste(Variable, Model, sep = ' / ')) %>%
-  # mutate(Scenario = factor(Scenario, 
-  #                          levels = sort(levels(res_long_df$Scenario), decreasing = F))) %>%
   filter(Variable == "Wild") %>%
   ggplot(aes(x = Scenario,
              y = rel_bias,
              fill = grp)) +
-  stat_summary(fun.data = hdi_box, 
-               geom = 'boxplot') +
-  stat_summary(fun = hdi_out,
-               geom = 'point',
-               color = 'gray') +
+  # stat_summary(fun.data = hdi_box,
+  #              geom = 'boxplot') +
+  # stat_summary(fun = hdi_out,
+  #              geom = 'point',
+  #              color = 'gray') +
+  geom_boxplot() +
   geom_hline(yintercept = 0,
              linetype = 2) +
   labs(y = 'Relative Bias',
