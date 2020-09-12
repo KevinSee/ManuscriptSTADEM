@@ -8,11 +8,11 @@ $$
 \end{aligned}
 $$
 
-Escapement of each origin is then randomly divided across a set number of populations, $n$, by randomly drawing proportions, $\phi_{j,p}$, of origin group $j$ in each population $p$ using a Dirichlet $\mathcal{PDF}$. The Dirichlet function is parameterized from a vector, $\zeta_j$, containing 1's and 0's designating populations with origin $j$ fish returning. $\zeta_j$ originates from a Binomial $\mathcal{PDF}$ with $n$ populations, and the proportion of populations with each origin, $\tau_j$. Wild fish are assumed to be in all populations; $\tau_w = 1.0$. The product of sampled population proportions $\phi_{j,p}$ and fixed $N_j$ yields a random variable of abundance for each origin in each population, $N_{j,p}$. Summing across origin abundances then gives a random total population abundance, $N_p$, crossing the dam.
+Escapement of each origin is then randomly divided across a set number of populations, $n$, by randomly drawing proportions, $\phi_{j,p}$, of origin group $j$ in each population $p$ using a Dirichlet $\mathcal{PDF}$. The Dirichlet function is parameterized from a vector, $\zeta_j$, containing 1's and 0's designating populations with origin $j$ fish returning. For each population $p$, $\zeta_{j,p}$ is drawn from a Bernoulli $\mathcal{PDF}$ using the proportion of populations that contain each origin, $\tau_j$. Wild fish are assumed to be in all populations; $\tau_w = 1.0$. The product of sampled population proportions $\phi_{j,p}$ and fixed $N_j$ yields a random variable of abundance for each origin in each population, $N_{j,p}$. Summing across origin abundances then gives a random total population abundance, $N_p$, crossing the dam.
 
 $$
 \begin{aligned}
-  \left[\zeta_{j,p=1},  ... , \zeta_{j,p=n}\right] &\sim \text{Binomial}(n, \tau_j) \\
+  \forall p, \zeta_{j,p} &\sim \text{Bernoulli}(\tau_j) \\
   \left[\phi_{j,p=1},  ... , \phi_{j,p=n}\right] &\sim \text{Dir}(\zeta_{j,p=1},  ... , \zeta_{j,p=n}) \\
   N_{j,p} &= N_j * \phi_{j,p} \\
   N_p &= \sum_{j=w, h, hnc} N_{j,p}
