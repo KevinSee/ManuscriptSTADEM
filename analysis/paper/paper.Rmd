@@ -309,7 +309,7 @@ We applied STADEM to data from Lower Granite Dam for Chinook Salmon and steelhea
 
 Weekly estimates of total escapement over Lower Granite Dam tracked the window counts and trap estimates (One example: Figure \@ref(fig:jags-fit-fig)). STADEM point estimates were often between estimates based on window counts and those based on the number of fish caught in the adult trap. However, for weeks when very few fish were caught in the trap or there was more uncertainty about the trap rate, STADEM estimates tracked the window counts more closely, as seen in the second week of July 2014, in Figure \@ref(fig:jags-fit-fig). That year also shows the utility of STADEM in dealing with missing data, as the trap was shut down for several weeks in July and August.
 
-<!-- John Hargrove: Is there a reason why you only present a singular year  in Figure 3? I acknowledge that having 10 years of data may make it unreadable – but perhaps justify why 2014 was selected or include all 10 years as separate plots using facet_wrap in ggplot. 
+<!-- John Hargrove: Is there a reason why you only present a singular year in Figure 3? I acknowledge that having 10 years of data may make it unreadable – but perhaps justify why 2014 was selected or include all 10 years as separate plots using facet_wrap in ggplot. 
 
 I think showing 10 time series plots is unnecessary (Table 3 shows how estimates match up with window counts). I think 2014 is a nice illustration of general agreement, with some examples of how STADEM doesn't always track the trap estimate, and how it deals with missing data. Do we need to make that more clear, or leave it as is?-->
 
@@ -379,12 +379,17 @@ crossing(`Trap rate` = c('0.15',
          `Window count error`) %>%
   kable(digits = 2,
         booktabs = T,
+        linesep = "",
         caption = "Summary of simulation scenarios including varying adult trapping, fallback and re-ascension rates, nighttime passage, and window count error rates use to evaluate the performance of STADEM.") %>%
-  kable_styling()
+  kable_styling(latex_options = c('scale_down',
+                                  "hold_position"))
 
 ```
 
+\newpage
+
 ```{r summ-tab}
+
 sum_tab <- res_long_df %>%
   filter(Variable == 'Unique.Wild.Fish',
          Model == 'STADEM') %>%
@@ -395,9 +400,7 @@ sum_tab <- res_long_df %>%
             `Relative bias` = mean(rel_bias),
             SE = sqrt(var(est)),
             `Mean CV` = mean(cv),
-            # RMSD = sqrt(var(est) + mean(bias)^2),
             RMSE = sqrt(mean(bias^2)),
-            MAE = mean(abs(bias)),
             Coverage = inCI/nsims) %>%
   mutate(Scenario = str_replace_all(Scenario,
                                     "_", " "),
@@ -407,21 +410,20 @@ sum_tab <- res_long_df %>%
   select(Scenario,
          `Relative bias`,
          `Mean CV`,
-         # RMSD,
          RMSE,
-         # MAE,
          Coverage)
 
-# mu_rmse <- sum_tab %>%
-#   group_by(Model) %>%
-#   summarise(mu = mean(RMSE))
-
 sum_tab %>%
-  kable(digits = 3,
+  kable(digits = c(0, 3, 3, 0, 3),
         booktabs = T,
-        caption = "Summary statistics, including relative bias, mean coefficient of variation (CV), root mean squared error (RMSE) and 95% credible interval coverage for results from each of the twelve simulation scenarios.") %>%
-  kable_styling()
+        linesep = "",
+        caption = "Summary statistics, including relative bias, mean coefficient of variation (CV), root mean squared error (RMSE) and 95 credible interval coverage for results from each of the twelve simulation scenarios.") %>%
+  kable_styling(latex_options = c('scale_down',
+                                  "hold_position"))
+
 ```
+
+\newpage
 
 ```{r lgr-tab}
 lgr_est %>%
@@ -440,8 +442,11 @@ lgr_est %>%
          Hatchery = X.tot.new.hatch,
          `Hatchery no-clip` = X.tot.new.hnc) %>%
   kable(booktabs = T,
+        linesep = "",
         caption = "Window counts, and estimates of total, wild, hatchery and hatchery no-clip escapement, with coefficients of variation in parenthesis, for Chinook Salmon and steelhead from spawn years 2010 to 2019.") %>%
-  kable_styling()
+  kable_styling(latex_options = c('scale_down',
+                                  "hold_position"))
+
 ```
 
 
