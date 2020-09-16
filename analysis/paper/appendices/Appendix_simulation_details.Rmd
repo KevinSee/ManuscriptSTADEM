@@ -1,6 +1,6 @@
 # Appendix B - Simulation Details {#append2}
 
-To simulate fish passing a dam, an $\mathbb{R}$ software function was developed [@R-Core-Team2020]. The function randomly samples observations from assumed probability distribution functions ($\mathcal{PDF}$) with known parameters. Total unique fish, $N$, and a vector, $\omega$, containing the proportions of wild ($w$), hatchery ($h$) and hatchery no-clip ($hnc$) fish passing the dam is set to establish known "truths" of escapement by origin.
+To simulate fish passing a dam, an $\mathbb{R}$ software function was developed [@R-Core-Team2020]. The function randomly samples observations from assumed probability distribution functions (pdf) with known parameters. Total unique fish, $N$, and a vector, $\omega$, containing the proportions of wild ($w$), hatchery ($h$) and hatchery no-clip ($hnc$) fish passing the dam is set to establish known "truths" of escapement by origin.
 
 $$
 \begin{aligned}
@@ -8,27 +8,27 @@ $$
 \end{aligned}
 $$
 
-Escapement of each origin is then randomly divided across a set number of populations, $n$, by randomly drawing proportions, $\phi_{j,p}$, of origin group $j$ in each population $p$ using a Dirichlet $\mathcal{PDF}$. The Dirichlet function is parameterized from a vector, $\zeta_j$, containing 1's and 0's designating populations with origin $j$ fish returning. For each population $p$, $\zeta_{j,p}$ is drawn from a Bernoulli $\mathcal{PDF}$ using the proportion of populations that contain each origin, $\tau_j$. Wild fish are assumed to be in all populations; $\tau_w = 1.0$. The product of sampled population proportions $\phi_{j,p}$ and fixed $N_j$ yields a random variable of abundance for each origin in each population, $N_{j,p}$. Summing across origin abundances then gives a random total population abundance, $N_p$, crossing the dam.
+Escapement of each origin is then randomly divided across a set number of populations, $n$, by randomly drawing proportions, $\phi_{j,p}$, of origin group $j$ in each population $p$ using a Dirichlet pdf. The Dirichlet function is parameterized from a vector, $\zeta_j$, containing 1's and 0's designating populations with origin $j$ fish returning. For each population $p$, $\zeta_{j,p}$ is drawn from a Bernoulli pdf using the proportion of populations that contain each origin, $\tau_j$. Wild fish are assumed to be in all populations; $\tau_w = 1.0$. The product of sampled population proportions $\phi_{j,p}$ and fixed $N_j$ yields a random variable of abundance for each origin in each population, $N_{j,p}$. Summing across origin abundances then gives a random total population abundance, $N_p$, crossing the dam.
 
 $$
 \begin{aligned}
-  \forall p, \zeta_{j,p} &\sim \text{Bernoulli}(\tau_j) \\
+  \zeta_{j,p} &\sim \text{Bernoulli}(\tau_j) \\
   \left[\phi_{j,p=1},  ... , \phi_{j,p=n}\right] &\sim \text{Dir}(\zeta_{j,p=1},  ... , \zeta_{j,p=n}) \\
   N_{j,p} &= N_j * \phi_{j,p} \\
   N_p &= \sum_{j=w, h, hnc} N_{j,p}
 \end{aligned}
 $$
 
-Mean arrival date, $\bar{a}_p$, for each population returning to the dam is drawn from a normal $\mathcal{PDF}$ with hyper-parameters $\mu_a$ and $\sigma^2_a$. Similarly, the variance or spread in run-timing within populations is the absolute value of random variables drawn from a normal $\mathcal{PDF}$ with hyper-parameters $\mu_s$ and $\sigma^2_s$.
+Mean arrival date, $\bar{a}_p$, for each population returning to the dam is drawn from a normal pdf with hyper-parameters $\mu_a$ and $\sigma^2_a$. Similarly, the variance or spread in run-timing within populations is the absolute value of random variables drawn from a normal pdf with hyper-parameters $\mu_s$ and $\sigma^2_s$.
 
 $$
 \begin{aligned}
  \left[\bar{a}_p, ..., \bar{a}_n\right] &\sim \text{Norm}(\mu_a, \sigma^2_a) \\
- \left[s_p, ..., s_n\right] &\sim \text{Norm}(\mu_s, \sigma^2_s)
+ \left[s_p, ..., s_n\right] &\sim \left | \text{Norm}(\mu_s, \sigma^2_s) \right |
 \end{aligned}
 $$
 
-After sampling the mean date of arrival and variances for each population, the date of arrival, $a_{i,p}$, for individual fish, $i$, within each population are drawn from a normal $\mathcal{PDF}$ with population parameters $\bar{a}_p$ and $s^2_p$. This simulates a random arrival day that is similar for all fish returning to the same population, regardless of origin.
+After sampling the mean date of arrival and variances for each population, the date of arrival, $a_{i,p}$, for individual fish, $i$, within each population are drawn from a normal pdf with population parameters $\bar{a}_p$ and $s^2_p$. This simulates a random arrival day that is similar for all fish returning to the same population, regardless of origin.
 
 $$
 \begin{aligned}
@@ -36,7 +36,7 @@ $$
 \end{aligned}
 $$
 
-To model different fish behavior and dam operational scenarios, seven additional attributes are randomly assigned to each individual fish. Each attribute is randomly assigned a TRUE/FALSE using a Bernoulli $\mathcal{PDF}$ and a fixed probability parameter. Fish passage during the day-time (i.e., during periods of window operation) is modeled using one minus the night-time passage rate ($1 - \nu$). Window observations are conditioned on fish passing during the day and being observed at a set rate, $\gamma$. Whether fish $i$ is sampled by the adult trap is modeled on the weekly set trap rate, $\delta_t$. The rate of previously PIT-tagged fish is determined by $\lambda$, and their subsequent detection at the ladder PIT antenna is governed by $\kappa$. Fallback behavior is modeled with a common rate across all populations, $\psi$. Re-ascension occurs with probability $\rho$, conditioned on fish $i$ falling back. If fish $i$ falls back and re-ascends, the entire process described above is repeated, with some time-lag between initial ascension and re-ascension that is governed by a Poisson $\mathcal{PDF}$ with mean = 2 days. Fish may fallback and re-ascend up to 3 times, allowing for the possibility of the same fish being counted or trapped multiple times.
+To model different fish behavior and dam operational scenarios, seven additional attributes are randomly assigned to each individual fish. Each attribute is randomly assigned a TRUE/FALSE using a Bernoulli pdf and a fixed probability parameter. Fish passage during the day-time (i.e., during periods of window operation) is modeled using one minus the night-time passage rate ($1 - \nu$). Window observations are conditioned on fish passing during the day and being observed at a set rate, $\gamma$. Whether fish $i$ is sampled by the adult trap is modeled on the weekly set trap rate, $\delta_t$. The rate of previously PIT-tagged fish is determined by $\lambda$, and their subsequent detection at the ladder PIT antenna is governed by $\kappa$. Fallback behavior is modeled with a common rate across all populations, $\psi$. Re-ascension occurs with probability $\rho$, conditioned on fish $i$ falling back. If fish $i$ falls back and re-ascends, the entire process described above is repeated, with some time-lag between initial ascension and re-ascension that is governed by a Poisson pdf with mean = 2 days. Fish may fallback and re-ascend up to 3 times, allowing for the possibility of the same fish being counted or trapped multiple times.
 
 $$
 \begin{aligned}
