@@ -27,17 +27,6 @@ output:
       - --lua-filter=../templates/scholarly-metadata.lua
       - --lua-filter=../templates/author-info-blocks2.lua
       - --lua-filter=../templates/pagebreak.lua
-    bookdown::word_document2:
-      fig_caption: yes
-      reference_docx: "../templates/template.docx" # Insert path for the DOCX file
-      number_sections: FALSE
-      toc: no
-      always_allow_html: true
-      fig_width: 7
-      pandoc_args:
-      - --lua-filter=../templates/scholarly-metadata.lua
-      - --lua-filter=../templates/author-info-blocks.lua
-      - --lua-filter=../templates/pagebreak.lua
     bookdown::pdf_document2:
       fig_caption: yes
       number_sections: FALSE
@@ -52,6 +41,17 @@ output:
       - --lua-filter=../templates/pagebreak.lua
       includes:
         in_header: ../templates/header_manuscript.tex
+    bookdown::word_document2:
+      fig_caption: yes
+      reference_docx: "../templates/template.docx" # Insert path for the DOCX file
+      number_sections: FALSE
+      toc: no
+      always_allow_html: true
+      fig_width: 7
+      pandoc_args:
+      - --lua-filter=../templates/scholarly-metadata.lua
+      - --lua-filter=../templates/author-info-blocks.lua
+      - --lua-filter=../templates/pagebreak.lua
 fontsize: 12pt
 mainfont: Times New Roman
 bibliography:
@@ -327,7 +327,7 @@ Recently, co-managers in the Snake River basin have adopted the STADEM framework
 
 I quickly pulled together the estimates from IDFG's latest report, 2010-2018 wild escapement. Their estimates of wild Chinook are about 4% higher than STADEM, and about 3% lower for wild steelhead. So far we've avoided explicitly comparing our results with existing methods in an effort to avoid confrontation. Maybe that's moot if IDFG has started adopting STADEM results, but looks like as of March 2019 they had not.
 
-Ryan and Kevin decided to not go down this path. One quick comparison is total escapement vs. window counts; which shows up in one of our tables, and we discuss it briefly in the results. -->
+Ryan and Kevin decided to not go down this path. One quick comparison is total escapement vs. window counts; which shows up in one of our tables, and we discuss it briefly in the results. The other is figure 4, showing nighttime passage and re-ascension rates, and how they don't match. -->
 
 Although STADEM was developed with salmonid escapement at Lower Granite Dam in mind, it could be applied to any migratory fish species at locations with similar monitoring infrastructure. Justification and infrastructure exist for applying a modified STADEM framework for fish passing Bonneville Dam, the lowest dam on the Columbia River, or Priest Rapids Dam in the upper Columbia River. Both locations currently trap a sub-sample of passing Chinook Salmon and/or steelhead for biological information and use window counts as a surrogate of true escapement. However, each has at least some similar problems to those observed at Lower Granite Dam such as unaccounted observer and sampling error, nighttime passage, and/or re-ascension. Certainly, estimating an unbiased total return to the entire Columbia River basin (i.e., Bonneville Dam) and Upper Columbia River with uncertainty would benefit managers and decision making.
 
@@ -455,7 +455,7 @@ lgr_est %>%
 
 # Figures
 
-```{r stadem-examp-fig, fig.width=3.5, fig.height=7, fig.cap = "Schematic of how the STADEM model works. (A) shows the posterior of the estimate of fish crossing the dam while the window is open (dashed line shows observed window counts). That estimate is divided by the nighttime passage rate (B). The total fish is then discounted by the re-ascension rate to estimate unique fish (C). Those unique fish are then multiplied by the proportions by origin (D), to estimate unique fish by origin."}
+```{r stadem-examp-fig, fig.width=3.5, fig.asp = 2, fig.cap = "Schematic of how the STADEM model works. (A) shows the posterior of the estimate of fish crossing the dam while the window is open (dashed line shows observed window counts). That estimate is divided by the nighttime passage rate (B). The total fish is then discounted by the re-ascension rate to estimate unique fish (C). Those unique fish are then multiplied by the proportions by origin (D), to estimate unique fish by origin."}
 
 arrow_length = unit(0.15, 'inches')
 arrow_height = 1.05
@@ -494,8 +494,6 @@ p1 = ggplot(data.frame(x = c(-5, 8)),
   #                  end = 0.3) +
   geom_vline(xintercept = 4,
              linetype = 2) +
-  coord_cartesian(xlim = my_xlim,
-                  ylim = my_ylim) +
   theme_pubr(legend = "bottom") +
   guides(color = guide_legend(nrow = 3,
                               title.position = 'top')) +
@@ -504,7 +502,12 @@ p1 = ggplot(data.frame(x = c(-5, 8)),
         axis.title.y = element_blank()) +
   labs(x = 'Escapement',
        color = 'Fish Type',
-       title = '   Daytime Fish')
+       title = '   Daytime Fish') +
+  coord_cartesian(xlim = my_xlim,
+                  ylim = my_ylim)
+# coord_fixed(ratio = 4,
+  #             xlim = my_xlim,
+  #             ylim = my_ylim)
 
 p2 = p1 +
   stat_function(fun = dnorm,
@@ -559,6 +562,7 @@ examp_p = ggarrange(p1, p2a, p3a, p4,
                     labels = 'AUTO',
                     ncol = 1,
                     nrow = 4,
+                    align = 'v',
                     common.legend = T,
                     legend = 'bottom')
 
