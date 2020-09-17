@@ -2,7 +2,7 @@
 
 ## Total and Weekly Escapement 
 
-Escapement at Lower Granite Dam (LGD) is estimated by combining two independent observations (trap catches and window counts) of the true number of fish crossing the dam in a state-space model [@royle2008hierarchical] with a weekly time-step. Both are assumed to be corrupted observations of the true unknown number of fish crossing LGD each week. The log of the true number of fish crossing ($X_t$), is modeled as a random walk process [@Shumway2010].
+Escapement at Lower Granite Dam (LGD) is estimated by combining two independent observations (trap catches and window counts) of the true number of fish crossing the dam in a state-space model [@Royle2008] with a weekly time-step. Both are assumed to be corrupted observations of the true unknown number of fish crossing LGD each week. The log of the true number of fish crossing ($X_t$), is modeled as a random walk process [@Shumway2010].
 
 $$
 \begin{aligned}
