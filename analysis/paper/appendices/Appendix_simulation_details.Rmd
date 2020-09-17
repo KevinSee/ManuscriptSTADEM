@@ -23,8 +23,8 @@ Mean arrival date, $\bar{a}_p$, for each population returning to the dam is draw
 
 $$
 \begin{aligned}
- \left[\bar{a}_p, ..., \bar{a}_n\right] &\sim \text{Norm}(\mu_a, \sigma^2_a) \\
- \left[s_p, ..., s_n\right] &\sim \left | \text{Norm}(\mu_s, \sigma^2_s) \right |
+ \left[\bar{a}_p, ..., \bar{a}_n\right] &\sim \mathcal{N}(\mu_a, \sigma^2_a) \\
+ \left[s_p, ..., s_n\right] &\sim \left | \mathcal{N}(\mu_s, \sigma^2_s) \right |
 \end{aligned}
 $$
 
@@ -32,7 +32,7 @@ After sampling the mean date of arrival and variances for each population, the d
 
 $$
 \begin{aligned}
- date_{i,p} &\sim \text{Norm}(\bar{a}_p, s^2_p) \\
+ date_{i,p} &\sim \mathcal{N}(\bar{a}_p, s^2_p) \\
 \end{aligned}
 $$
 
