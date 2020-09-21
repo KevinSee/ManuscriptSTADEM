@@ -378,7 +378,7 @@ crossing(`Trap rate` = c('0.15',
   kable(digits = 2,
         booktabs = T,
         linesep = "",
-        caption = "Summary of simulation scenarios including varying adult trapping, fallback and re-ascension rates, nighttime passage, and window count error rates use to evaluate the performance of STADEM.") %>%
+        caption = "Summary of simulation scenarios including varying adult trapping, fallback and re-ascension, nighttime passage, and window count error rates used to evaluate the performance of STADEM.") %>%
   kable_styling(latex_options = c('scale_down',
                                   "hold_position")) %>%
   column_spec(column = 2,
@@ -456,7 +456,7 @@ lgr_est %>%
 
 # Figures
 
-```{r stadem-examp-fig, fig.width=3.5, fig.asp = 2, fig.cap = "Schematic of how the STADEM model works. (A) shows the posterior of the estimate of fish crossing the dam while the window is open (dashed line shows observed window counts). That estimate is divided by the nighttime passage rate (B). The total fish is then discounted by the re-ascension rate to estimate unique fish (C). Those unique fish are then multiplied by the proportions by origin (D), to estimate unique fish by origin."}
+```{r stadem-examp-fig, fig.width=3.5, fig.asp = 2, fig.cap = "Schematic showing the STADEM model framework. (A) shows the posterior of the estimate of fish crossing the dam while the window is open (dashed line shows observed window counts). That estimate is divided by the nighttime passage rate (B). The total fish is then discounted by the re-ascension rate to estimate unique fish (C). Those unique fish are then multiplied by the proportions by origin (D), to estimate unique fish by origin."}
 
 arrow_length = unit(0.15, 'inches')
 arrow_height = 1.05
@@ -618,7 +618,7 @@ rel_bias_p
 
 \newpage
 
-```{r jags-fit-fig, fig.cap = "Time-series plot showing estimates of total escapement for Chinook in 2014, including window counts, trap estimates and STADEM estimates. The gray ribbon represents the 95% credible intervals for STADEM estimates, while the red ribbon represents the 95% confidence intervals for the trap estimates."}
+```{r jags-fit-fig, fig.cap = "Time-series plot showing estimates of total escapement for Chinook Salmon in 2014, including window counts, trap estimates and STADEM estimates. The gray ribbon represents the 95% credible intervals for STADEM estimates, while the red ribbon represents the 95% confidence intervals for the trap estimates."}
 
 # get plotting data from particular year
 plot_df = tibble(Species = "Chinook",
@@ -731,7 +731,7 @@ ts_col
 
 \newpage
 
-```{r night-reasc-diff-fig, fig.height=5, fig.cap = "Nighttime passage rate plotted against re-ascension rate on the logit scale, calculated from observed PIT tags for each week of spawn years 2010-2019. Colors correspond to different spawn year, while the size of each point is proportional to the window count that week. The dashed line is the 1-1 line."}
+```{r night-reasc-diff-fig, fig.height=5, fig.cap = "Nighttime passage rate plotted against re-ascension rate on the logit scale, calculated from observed PIT tags for each week of spawn years 2010-2019. Colors correspond to different spawn years, while the size of each point is proportional to the window count that week. The dashed line is the 1-1 line."}
 
 rate_p_base = rate_comp %>%
   filter(win_cnt > 0) %>%
