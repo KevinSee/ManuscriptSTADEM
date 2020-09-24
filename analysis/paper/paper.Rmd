@@ -29,6 +29,15 @@ output:
       - --lua-filter=../templates/scholarly-metadata.lua
       - --lua-filter=../templates/author-info-blocks.lua
       - --lua-filter=../templates/pagebreak.lua
+    bookdown::html_document2:
+      fig_caption: yes
+      number_sections: FALSE
+      toc: no
+      fig_width: 7
+      pandoc_args:
+      - --lua-filter=../templates/scholarly-metadata.lua
+      - --lua-filter=../templates/author-info-blocks2.lua
+      - --lua-filter=../templates/pagebreak.lua
     bookdown::pdf_document2:
       fig_caption: yes
       number_sections: FALSE
@@ -43,15 +52,6 @@ output:
       - --lua-filter=../templates/pagebreak.lua
       includes:
         in_header: ../templates/header_manuscript.tex
-    bookdown::html_document2:
-      fig_caption: yes
-      number_sections: FALSE
-      toc: no
-      fig_width: 7
-      pandoc_args:
-      - --lua-filter=../templates/scholarly-metadata.lua
-      - --lua-filter=../templates/author-info-blocks2.lua
-      - --lua-filter=../templates/pagebreak.lua
 fontsize: 12pt
 mainfont: Times New Roman
 bibliography:
@@ -326,7 +326,7 @@ Although STADEM was developed with salmonid escapement at Lower Granite Dam in m
 
 ## Acknowledgements
 
-Funding for this study and development of the STADEM model was partially provided by the Bonneville Power Administration under project 2003-017-00. Special thanks to Darren Ogden and staff at the Lower Granite Dam adult trap for their hard work and diligent data collection. Thank you to personnel at the Idaho Department of Fish and Game, particularly Paul Bunn, Tim Copeland, and Bill Schrader, for providing access to data from the adult fish trap and conceptualizing methods, and to Matthew Campbell and staff at the Eagle Fish Genetics Laboratory for analyzing genetic samples. Special thanks to Columbia Basin Research staff and the Columbia River Data Access in Real Time (DART) application, and Susannah Iltis in particular. And finally, thank you to Rick Orme and Brice Semmens for their contributions to the development of STADEM, and all the other people who have contributed through productive critique and conversations.
+Funding for this study and development of the STADEM model was partially provided by the Bonneville Power Administration under project 2003-017-00. Special thanks to Darren Ogden and staff at the Lower Granite Dam adult trap for their hard work and diligent data collection. Thank you to personnel at the Idaho Department of Fish and Game, particularly Paul Bunn, Tim Copeland, and Bill Schrader, for providing access to data from the adult fish trap and conceptualizing methods, and to Matthew Campbell and staff at the Eagle Fish Genetics Laboratory for analyzing genetic samples. Special thanks to Columbia Basin Research staff and the Columbia River Data Access in Real Time (DART) application, and Susannah Iltis in particular. And finally, thank you to Rick Orme and Brice Semmens for their contributions to the development of STADEM, as well as Eric Buhle, Sarah Hoffman, John Hargrove and all the other people who have contributed through productive critique and conversations.
 
 \newpage
 
