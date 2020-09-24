@@ -11,7 +11,7 @@
 
 <meta name="author" content="Kevin E. See1,✉, Ryan N. Kinzer2, and Michael W. Ackerman1" />
 
-<meta name="date" content="2020-09-23" />
+<meta name="date" content="2020-09-24" />
 
 <title>State-Space Model to Estimate Salmon Escapement Using Multiple Data Sources</title>
 
@@ -384,7 +384,7 @@ summary {
 
 <h1 class="title toc-ignore">State-Space Model to Estimate Salmon Escapement Using Multiple Data Sources</h1>
 <h4 class="author">Kevin E. See<sup>1,✉</sup>, Ryan N. Kinzer<sup>2</sup>, and Michael W. Ackerman<sup>1</sup></h4>
-<h4 class="date">September 23, 2020</h4>
+<h4 class="date">September 24, 2020</h4>
 <div class="abstract">
 <p class="abstract">Abstract</p>
 <p>Accurate estimates of salmonids passing Lower Granite Dam on the Snake River, by species and origin, are a critical input to assessing the status and trends of various populations, as well as successful management of fisheries in the Snake River basin. Here we describe a state-space model that estimates such escapement past a dam by using window counts, passive integrated transponder (PIT) tag observations and data from an adult fish trap, accounting for issues such as nighttime passage, fallback and re-ascension, potential observation error at the window and uncertainty in the adult trap rate. We tested the approach using a simulation framework that mimicked several levels of observation error, differences between nighttime passage and re-ascension rates and the possibility of the adult trap being closed for some period of time. Our results demonstrate that the model produced unbiased estimates across all tested scenarios. We also applied this model to data from the Lower Granite Dam to produce estimates of wild, clipped hatchery and unclipped hatchery spring-summer run Chinook Salmon and steelhead from spawn years 2010-2019.</p>
@@ -417,7 +417,7 @@ summary {
 <div id="adult-fish-trap-data" class="section level3">
 <h3>Adult Fish Trap Data</h3>
 <p>The second source of data came from a sample of fish collected in the adult trap as they migrated past Lower Granite Dam <span class="citation">(Ogden 2016a)</span>. The trap, also located within the adult fish ladder and upstream of the observation window, provides an opportunity to collect biological data (e.g., origin [wild, hatchery], genetic stock, length, age, sex) from captured adults which allows for decomposition of the escapement into specific groups <span class="citation">(e.g., Camacho et al. 2018; Steinhorst et al. 2017)</span>. The trap was operational for 24 hours per day and randomly sampled the run by opening four times per hour for a length of time determined by a set daily trapping rate. The trap rate was determined by a committee of collaborating management agencies with a goal of capturing a target number of wild fish while also balancing fish handling concerns. Trap sample rates were typically 10-25%, but fluctuated throughout the season due to, for example, high water temperatures, decreased flows, trap malfunctions and/or closures, fish handling logistics, in-season forecast adjustments, or adjustments due to shifting species composition throughout the year.</p>
-<p>All captured fish were anesthetized, speciated, examined for existing marks or tags, measured for fork length and visually identified as wild or hatchery. The most widely used marking of hatchery fish is a clipped (removed) adipose fin, although coded wire tags are used in less than 10% of the hatchery releases. Some subset of hatchery fish are either intentionally or unintentionally released without a clipped adipose fin, and these are referred to as unclipped hatchery fish, or hatchery no-clips (HNC). For adults with intact adipose fins (unclipped), which includes wild and hatchery no-clip individuals, either a portion or all of fish trapped (depending on the year) had scale and genetic tissue samples taken. Scale samples were used to estimate age <span class="citation">(Wright et al. 2015)</span> and genetic tissue samples were used to determine sex <span class="citation">(Campbell et al. 2012)</span> and estimate the location of origin of wild fish using genetic stock identification (e.g., <span class="citation">Hargrove et al. (2019)</span>). Prior to 2013, only fish determined to be wild in origin at the trap were sampled for scale and genetics. Starting in 2013, every unclipped Chinook Salmon and steelhead trapped at Lower Granite Dam was genotyped to simplify collaborative logistics and better estimate the proportion of unclipped hatchery fish that appear phenotypically wild. <span class="citation">Camacho et al. (2018)</span> provide further details on trap sample rates and valid sample selection. Prior to release, all non-PIT tagged fish with an intact adipose fin (i.e., putatively wild) received a PIT tag. Final determination of wild, clipped hatchery, or unclipped hatchery origins were assigned using a post-hoc analysis of marks and tags, including parentage-based tagging <span class="citation">(Steele et al. 2013, 2019)</span>. Data from the adult trap were collected and managed by multiple agencies and were made available by the Idaho Department of Fish and Game <span class="citation">(Camacho et al. 2018)</span>.</p>
+<p>All captured fish were anesthetized, speciated, examined for existing marks or tags, measured for fork length and visually identified as wild or hatchery. The most widely used marking of hatchery fish is a clipped (removed) adipose fin, although coded wire tags are used in less than 10% of the hatchery releases. Some subset of hatchery fish are either intentionally or unintentionally released without a clipped adipose fin, and these are referred to as unclipped hatchery fish, or hatchery no-clips (HNC). For adults with intact adipose fins (unclipped), which includes wild and hatchery no-clip individuals, either a portion or all of fish trapped (depending on the year) had scale and genetic tissue samples taken. Scale samples were used to estimate age <span class="citation">(Wright et al. 2015)</span> and genetic tissue samples were used to determine sex <span class="citation">(Campbell et al. 2012)</span> and estimate the location of origin of wild fish using genetic stock identification <span class="citation">(e.g., Hargrove et al. 2019)</span>. Prior to 2013, only fish determined to be wild in origin at the trap were sampled for scale and genetics. Starting in 2013, every unclipped Chinook Salmon and steelhead trapped at Lower Granite Dam was genotyped to simplify collaborative logistics and better estimate the proportion of unclipped hatchery fish that appear phenotypically wild. <span class="citation">Camacho et al. (2018)</span> provide further details on trap sample rates and valid sample selection. Prior to release, all non-PIT tagged fish with an intact adipose fin (i.e., putatively wild) received a PIT tag. Final determination of wild, clipped hatchery, or unclipped hatchery origins were assigned using a post-hoc analysis of marks and tags, including parentage-based tagging <span class="citation">(Steele et al. 2013, 2019)</span>. Data from the adult trap were collected and managed by multiple agencies and were made available by the Idaho Department of Fish and Game <span class="citation">(Camacho et al. 2018)</span>.</p>
 </div>
 <div id="pit-tag-data" class="section level3">
 <h3>PIT Tag Data</h3>
@@ -453,11 +453,6 @@ summary {
 <h2>Lower Granite Application</h2>
 <p>We applied STADEM to data from Lower Granite Dam for Chinook Salmon and steelhead for spawn years 2010–2019. Estimates of total escapement, as well as estimates of wild, hatchery clipped, and hatchery no-clip estimates are presented in Table <a href="#tab:lgr-tab">3</a>. Estimates of total unique fish escaping past Lower Granite Dam were sometimes higher and sometimes lower than the raw window counts, indicating that the relative strength of nighttime passage and re-ascension rates differed across years. CVs ranged from 2.5-7.1% for wild fish, 2.3-5.1% for clipped hatchery fish, 3.4-8.8% for hatchery no-clip fish and 2.2-4.7% for total unique fish past Lower Granite Dam.</p>
 <p>Weekly estimates of total escapement over Lower Granite Dam tracked the window counts and trap estimates (One example: Figure <a href="#fig:jags-fit-fig">3</a>. Similar plots for all model runs [each species and year combination] are available on the manuscript GitHub page: <a href="%5Bhttps://www.github.com/KevinSee/ManuscriptSTADEM%5D">https://www.github.com/KevinSee/ManuscriptSTADEM</a>). STADEM point estimates were often between estimates based on window counts and those based on the number of fish caught in the adult trap. However, for weeks when very few fish were caught in the trap or there was more uncertainty about the trap rate, STADEM estimates tracked the window counts more closely, as seen in the second week of July 2014, in Figure <a href="#fig:jags-fit-fig">3</a>. That year also shows the utility of STADEM in dealing with missing data, as the trap was shut down for several weeks in July and August. The model’s uncertainty is always smaller than the uncertainty from the trap estimates alone, whereas the window counts alone provide no estimate of uncertainty.</p>
-<!-- John Hargrove: Is there a reason why you only present a singular year in Figure 3? I acknowledge that having 10 years of data may make it unreadable – but perhaps justify why 2014 was selected or include all 10 years as separate plots using facet_wrap in ggplot. 
-
-I think showing 10 time series plots is unnecessary (Table 3 shows how estimates match up with window counts). I think 2014 is a nice illustration of general agreement, with some examples of how STADEM doesn't always track the trap estimate, and how it deals with missing data. Do we need to make that more clear, or leave it as is?
-
-After experimenting with 4 years, Ryan and Kevin decided even 4 was too busy. Let's stick with one, and note that the rest are on the github repo-->
 <p>Estimates of weekly nighttime passage and re-ascenstion rates did not match in most cases (Figure <a href="#fig:night-reasc-diff-fig">4</a>). In particular, there are several weeks when the window counts are quite large and the rates differ by as much as 10%. When nighttime passage is larger than re-ascension, the window counts will be biased low, and vice versa.</p>
 </div>
 </div>
@@ -465,13 +460,8 @@ After experimenting with 4 years, Ryan and Kevin decided even 4 was too busy. Le
 <h1>Discussion</h1>
 <p>We have presented a novel method for estimating adult salmonid escapement past a large hydroelectric facility (e.g., Lower Granite Dam) that incorporates data from window counts, a fish trap, and observations of PIT tagged fish in the adult passage ladder. Our model explicitly accounts for nighttime passage, re-ascension, and potential error in both window and trap estimates. In doing so, we demonstrated that at Lower Granite Dam, nighttime passage and re-ascension rates do not always offset each other, and assuming they do will lead to biased escapement estimates in some years. With minor adjustments this modeling framework and the STADEM package could be applied to similar migratory species at Lower Granite Dam (e.g., fall Chinook Salmon, Pacific lamprey <em>Lampetra tridentata</em>), or elsewhere, provided a fish passage barrier with a counting mechanism, a trap that can be used to sample a portion of the run and tag observation or detection infrastructure (e.g., a PIT tag detection array or similar). Our state-space model combined multiple imperfect sources of data to reduce bias in adult escapement estimates and provided quantitative estimates of uncertainty. Accurate population or group abundance estimates and uncertainty accounting for observation and process error can be particularly important when estimates are used for management and conservation decisions such as population viability analyses.</p>
 <p>Combining data from the adult fish trap with live and video window counts provides several benefits. First, it allows us to model observer error in the window counts, which is typically unknown. If estimates rely on window counts alone, quantifying observer error is impossible. Capturing and accounting for known sources of error is prudent to minimize management decision risk. Second, by incorporating both sources of information in a state-space framework, STADEM incorporates missing data at either the observation window or adult trap seamlessly. At Lower Granite Dam, the adult trap has been closed for brief or extended periods of time (i.e., days, weeks) intermittently in five of the last ten years, often during peak run times <span class="citation">(USACE 2010, 2011, 2012, 2013, 2015, 2016, 2017, 2018, 2019; Ogden 2016b)</span>. Trap closures are typically associated with elevated water temperatures resulting in potential fish handling stress and/or trap malfunctions <span class="citation">(Ogden 2016a)</span>. Given predicted Pacific Northwest climate change scenarios <span class="citation">(Zhang et al. 2019)</span> trap closures from high water temperatures may become more commonplace in the future, amplifying the need for a modeling framework that accounts for periods of missing data while still capturing estimate uncertainty. Additionally, having a framework in place that accounts for missing periods of data will allow for increased logistic flexibility if, for example, maintenance or construction is needed at the observational window or adult trap.</p>
-<p>STADEM could be modified and run on a weekly basis or in near real-time to provide better in-season estimates for fisheries managers. Currently, the only roadblock to this at Lower Granite Dam is the identification of hatchery no-clip fish using genetic tissue samples <span class="citation">(Steele et al. 2013, 2019)</span> collected at the adult trap, which currently is completed post-hoc after the trapping season. The inclusion of genetic information typically results in a reduction in wild escapement estimates and an associated increase in hatchery no-clip escapement <span class="citation">(Hargrove et al. n.d.)</span>. However, if in-season management decisions do not require this correction or could accept the potential bias, origin calls at the trap could be used in-season as a first approximation to escapement. Final post-hoc estimates parsed by origin could then be finalized at season’s end. All other data included in this model (e.g., window counts and PIT observations) are otherwise provided in near real-time by DART. Provided the Lower Granite Dam adult fish trap database was updated and available in near real-time, there are minimal obstacles for adapting the STADEM framework to provide in-season estimates of escapement.</p>
+<p>STADEM could be modified and run on a weekly basis or in near real-time to provide better in-season estimates for fisheries managers. Currently, the only roadblock to this at Lower Granite Dam is the identification of hatchery no-clip fish using genetic tissue samples <span class="citation">(Steele et al. 2013, 2019)</span> collected at the adult trap, which currently is completed post-hoc after the trapping season. The inclusion of genetic information typically results in a reduction in wild escapement estimates and an associated increase in hatchery no-clip escapement. However, if in-season management decisions do not require this correction or could accept the potential bias, origin calls at the trap could be used in-season as a first approximation to escapement. Final post-hoc estimates parsed by origin could then be finalized at season’s end. All other data included in this model (e.g., window counts and PIT observations) are otherwise provided in near real-time by DART. Provided the Lower Granite Dam adult fish trap database was updated and available in near real-time, there are minimal obstacles for adapting the STADEM framework to provide in-season estimates of escapement.</p>
 <p>Recently, co-managers in the Snake River basin have adopted the STADEM framework to estimate escapement of spring-summer run Chinook Salmon and steelhead past Lower Granite Dam, and returning to tributary or population specific spawning areas <span class="citation">(Kinzer et al. 2020a, 2020b)</span>. Estimates of species and origin-specific escapement at Lower Granite Dam, including known uncertainty, are available to further parse into sex- or age-structured escapement estimates <span class="citation">(e.g., Camacho et al. 2018; Schrader et al. 2013)</span> that are important for fisheries management and productivity monitoring of wild populations. As an example, STADEM is being applied at Lower Granite Dam to estimate the total unique wild fish migrating past the dam. Estimates of fish passing the dam are then combined with estimated movement or transition probabilities based on PIT tag observations at instream PIT tag detection systems throughout the Snake River basin, similar to <span class="citation">Waterhouse et al. (2020)</span>, to estimate escapement to Snake River populations and locations throughout the basin <span class="citation">(Orme et al. 2019)</span>. Combined, escapement estimates from STADEM and movement probability estimates provide abundance estimates to given tributaries or populations. With sex and age data collected at the adult fish trap <span class="citation">(Hargrove et al. 2019)</span>, this approach provides necessary information to evaluate productivity and population viability for select Snake River Chinook Salmon and steelhead groups <span class="citation">(Kinzer et al. 2020b)</span>.</p>
-<!-- John Hargrove: Have you considered comparing estimate that you produced  to those that failed to account for fallback/reascension to see how much difference there is? In other words, you could draw estimates from Camacho and Schrader docs and readily compare – may serve to better illustrate your point of the superiority of accounting for these errors relative to less complicated models
-
-I quickly pulled together the estimates from IDFG's latest report, 2010-2018 wild escapement. Their estimates of wild Chinook are about 4% higher than STADEM, and about 3% lower for wild steelhead. So far we've avoided explicitly comparing our results with existing methods in an effort to avoid confrontation. Maybe that's moot if IDFG has started adopting STADEM results, but looks like as of March 2019 they had not.
-
-Ryan and Kevin decided to not go down this path. One quick comparison is total escapement vs. window counts; which shows up in one of our tables, and we discuss it briefly in the results. The other is figure 4, showing nighttime passage and re-ascension rates, and how they don't match. -->
 <p>Although STADEM was developed with salmonid escapement at Lower Granite Dam in mind, it could be applied to any migratory fish species at locations with similar monitoring infrastructure. Justification and infrastructure exist for applying a modified STADEM framework for fish passing Bonneville Dam, the lowest dam on the Columbia River, or Priest Rapids Dam in the upper Columbia River. Both locations currently trap a sub-sample of passing Chinook Salmon and/or steelhead for biological information and use window counts as a surrogate of true escapement. However, each has at least some similar problems to those observed at Lower Granite Dam such as unaccounted observer and sampling error, nighttime passage, and/or re-ascension. Certainly, estimating an unbiased total return to the entire Columbia River basin (i.e., Bonneville Dam) and Upper Columbia River with uncertainty would benefit managers and decision making.</p>
 <div id="acknowledgements" class="section level2">
 <h2>Acknowledgements</h2>
@@ -490,55 +480,52 @@ Ryan and Kevin decided to not go down this path. One quick comparison is total e
 <p>Bue, B. G., S. M. Fried, S. Sharr, D. G. Sharp, J. A. Wilcock, and H. J. Geiger. 1998. Estimating salmon escapement using area-under-the-curve, aerial observer efficiency, and stream-life estimates: The Prince William Sound pink salmon example. North Pacific Anadromous Fish Commission Bulletin 1:240–250.</p>
 </div>
 <div id="ref-Camacho2018">
-<p>Camacho, C. A., J. Powell, M. Davison, M. E. Dobos, W. C. Schrader, T. Copeland, and M. Campbell. 2018. Wild adult steelhead and Chinook Salmon abundance and composition at Lower Granite Dam, spawn year 2017. Idaho Department of Fish; Game, Annual Report 19-09.</p>
+<p>Camacho, C. A., J. Powell, M. Davison, M. E. Dobos, W. C. Schrader, T. Copeland, and M. Campbell. 2018. Wild adult steelhead and Chinook Salmon abundance and composition at Lower Granite Dam, spawn year 2017. Idaho Department of Fish and Game, Fishery Research, Annual Progress Report 19-09.</p>
 </div>
 <div id="ref-Campbell2012">
 <p>Campbell, M. R., C. C. Kozfkay, T. Copeland, W. C. Schrader, M. W. Ackerman, and S. R. Narum. 2012. Estimating abundance and life history characteristics of threatened wild Snake River steelhead stocks by using genetic stock identification. Transactions of the American Fisheries Society 141(5):1310–1327.</p>
 </div>
 <div id="ref-Crozier2019">
-<p>Crozier, L. G., M. M. McClure, T. Beechie, S. J. Bograd, D. A. Boughton, M. Carr, T. D. Cooney, J. B. Dunham, C. M. Greene, M. A. Haltuch, and others. 2019. Climate vulnerability assessment for Pacific salmon and steelhead in the California current large marine ecosystem. PloS one 14(7):e0217711. Public Library of Science San Francisco, CA USA.</p>
+<p>Crozier, L. G., M. M. McClure, T. Beechie, S. J. Bograd, D. A. Boughton, M. Carr, T. D. Cooney, J. B. Dunham, C. M. Greene, M. A. Haltuch, and others. 2019. Climate vulnerability assessment for Pacific salmon and steelhead in the California current large marine ecosystem. PloS one 14(7):e0217711.</p>
 </div>
 <div id="ref-Dauble2000">
-<p>Dauble, D. D., and R. P. Mueller. 2000. Upstream passage monitoring: Difficulties in estimating survival for adult Chinook Salmon in the Columbia and Snake Rivers. Fisheries 25(8):24–34. Taylor &amp; Francis.</p>
-</div>
-<div id="ref-Hargrove2020">
-<p>Hargrove, J., C. Camacho, W. Schrader, J. Powell, T. Delomas, J. Hess, S. Narum, and M. Campbell. (n.d.). Parentage-based tagging improves escapement estimates for ESA-listed adult Chinook Salmon and steelhead in the Snake River basin.</p>
+<p>Dauble, D. D., and R. P. Mueller. 2000. Upstream passage monitoring: Difficulties in estimating survival for adult Chinook Salmon in the Columbia and Snake rivers. Fisheries 25(8):24–34.</p>
 </div>
 <div id="ref-Hargrove2019">
-<p>Hargrove, J. S., T. A. Delomas, and M. Davison. 2019. Chinook and steelhead genotyping for genetic stock identification at Lower Granite Dam. Idaho Department of Fish and Game, 19-08.</p>
+<p>Hargrove, J. S., T. A. Delomas, and M. Davison. 2019. Chinook Salmon and steelhead genotyping for genetic stock identification at Lower Granite Dam. Idaho Department of Fish and Game, Fishery Research, Annual Progress Report 19-08.</p>
 </div>
 <div id="ref-Hatch1994">
-<p>Hatch, D. R., D. R. Pederson, and J. Fryer. 1994. Feasibility of documenting and estimating adult fish passage at large hydroelectric facilities in the snake river using video technology; 1993 final report. Columbia River Inter-Tribal Fish Commission.</p>
+<p>Hatch, D. R., D. R. Pederson, and J. Fryer. 1994. Feasibility of documenting and estimating adult fish passage at large hydroelectric facilities in the Snake River using video technology; 1993 final report. Columbia River Inter-Tribal Fish Commission.</p>
 </div>
 <div id="ref-Hess2014">
 <p>Hess, J. E., J. M. Whiteaker, J. K. Fryer, and S. R. Narum. 2014. Monitoring stock-specific abundance, run timing, and straying of Chinook Salmon in the Columbia River using genetic stock identification (GSI). North American Journal of Fisheries Management 34(1):184–201.</p>
 </div>
 <div id="ref-WDFW2019">
-<p>Joint Columbia River Management Staff. 2019. 2019 Joint Staff Report: Stock status and fisheries for Spring Chinook, Summer Chinook, Sockeye, steelhead, and other species. Oregon Department of Fish &amp; Wildlife; Washington Department of Fish &amp; WIldlife.</p>
+<p>Joint Columbia River Management Staff. 2019. 2019 Joint Staff Report: Stock status and fisheries for spring Chinook, summer Chinook, sockeye, steelhead, and other species. Oregon Department of Fish &amp; Wildlife; Washington Department of Fish &amp; Wildlife.</p>
 </div>
 <div id="ref-Kinzer2020">
-<p>Kinzer, R. N., H. Arnsberg Bill, A. Maxwell, R. Orme, C. Rabe, and S. Vatland. 2020a. Snake River basin adult Chinook Salmon and steelhead monitoring 2019 annual report. Nez Perce Tribe, Department of Fisheries Resources Management, Research Division, Lapwai, ID.</p>
+<p>Kinzer, R. N., B. Arnsberg, J. Harbeck, A. Maxwell, R. Orme, C. Rabe, and S. Vatland. 2020a. Snake River basin adult Chinook Salmon and steelhead monitoring, 2019 annual report. Nez Perce Tribe, Department of Fisheries Resources Management, Research Division, Lapwai, ID.</p>
 </div>
 <div id="ref-IPTDSW2020">
-<p>Kinzer, R., R. Orme, M. Campbell, J. Hargrove, and K. See. 2020b. Report to NOAA Fisheries for 5-year ESA status review: Snake River basin steelhead and Chinook salmon population abundance, life history, and diversity metrics calculated from in-stream PIT- tag observations (SY2010-SY2019). IPTDSW (In-stream PIT-tag detection systems workgroup).</p>
+<p>Kinzer, R., R. Orme, M. Campbell, J. Hargrove, and K. See. 2020b. Report to NOAA Fisheries for 5-year ESA status review: Snake River basin steelhead and Chinook Salmon population abundance, life history, and diversity metrics calculated from in-stream PIT-tag observations (SY2010-SY2019). IPTDSW (In-stream PIT-tag detection systems workgroup).</p>
 </div>
 <div id="ref-McClure2003">
-<p>McClure, M. M., E. E. Holmes, B. L. Sanderson, and C. E. Jordan. 2003. A large-scale, multispecies status assessment: Anadromous salmonids in the Columbia River basin. Ecological Applications 13(4):964–989. Wiley Online Library.</p>
+<p>McClure, M. M., E. E. Holmes, B. L. Sanderson, and C. E. Jordan. 2003. A large-scale, multispecies status assessment: Anadromous salmonids in the Columbia River basin. Ecological Applications 13(4):964–989.</p>
 </div>
 <div id="ref-McElhany2000">
-<p>McElhany, P., M. H. Rucklelshaus, M. J. Ford, T. C. Wainwright, and E. P. Bjorkstedt. 2000. Viable salmonid populations and the recovery of evolutionarily significant units. U.S. Dept. Commer., NOAA Tech. Memo. NMFS-NWFSC-42.</p>
+<p>McElhany, P., M. H. Rucklelshaus, M. J. Ford, T. C. Wainwright, and E. P. Bjorkstedt. 2000. Viable salmonid populations and the recovery of evolutionarily significant units. U.S. Department of Commerce, NOAA Technical Memorandum NMFS-NWFSC-42.</p>
 </div>
 <div id="ref-NMFS2019">
-<p>National Marine Fisheries Service. 2019. Endangered Species Act (ESA) Section 7(a)(2) Biological Opinion and Magnuson-Stevens Fishery Conservation and Management Act Essential Fish Habitat Response. Continued Operation and Maintenance of the Columbia River System. National Marine Fisheries Service, NMFS Consultation WCRO-2019-02395.</p>
+<p>National Marine Fisheries Service. 2019. Endangered Species Act (ESA) Section 7(a)(2) biological opinion and Magnuson-Stevens Fishery Conservation and Management Act essential fish habitat response. Continued operation and maintenance of the Columbia River system. National Marine Fisheries Service, NMFS Consultation WCRO-2019-02395.</p>
 </div>
 <div id="ref-Nehlsen1991">
-<p>Nehlsen, W., J. E. Williams, and J. A. Lichatowich. 1991. Pacific salmon at the crossroads: Stocks at risk from California, Oregon, Idaho, and Washington. Fisheries 16(2):4–21. Wiley Online Library.</p>
+<p>Nehlsen, W., J. E. Williams, and J. A. Lichatowich. 1991. Pacific salmon at the crossroads: Stocks at risk from California, Oregon, Idaho, and Washington. Fisheries 16(2):4–21.</p>
 </div>
 <div id="ref-NWFSC2015">
 <p>Northwest Fisheries Science Center. 2015. Status review update for Pacific salmon and steelhead listed under the Endangered Species Act: Pacific Northwest.</p>
 </div>
 <div id="ref-NPCC2014">
-<p>NPCC. 2014. Columbia River basin fish and wildlife program. Northwest Power; Conservation Council.</p>
+<p>NPCC. 2014. Columbia River basin fish and wildlife program. Northwest Power &amp; Conservation Council.</p>
 </div>
 <div id="ref-Ogden2014">
 <p>Ogden, D. A. 2014. Operation of the adult trap at Lower Granite Dam 2013. NOAA National Marine Fisheries Service.</p>
@@ -553,16 +540,16 @@ Ryan and Kevin decided to not go down this path. One quick comparison is total e
 <p>Orme, R., R. Kinzer, and C. Albee. 2019. Population and tributary level escapement estimates of Snake River natural-origin spring/summer Chinook Salmon and steelhead from in-stream PIT tag detection systems - 2019 annual report. Nez Perce Tribe, Department of Fisheries Resources Management, Research Division, Lapwai, ID.</p>
 </div>
 <div id="ref-R-rjags">
-<p>Plummer, M. 2019. Rjags: Bayesian graphical models using mcmc.</p>
+<p>Plummer, M. 2019. Rjags: Bayesian graphical models using MCMC.</p>
 </div>
 <div id="ref-R-Core-Team2020">
-<p>R Core Team. 2020. R: A Language and Environment for Statistical Computing. R Foundation for Statistical Computing, Vienna, Austria.</p>
+<p>R Core Team. 2020. R: A language and environment for statistical computing. R Foundation for Statistical Computing, Vienna, Austria.</p>
 </div>
 <div id="ref-Royle2008">
 <p>Royle, J. A., and R. M. Dorazio. 2008. Hierarchical modeling and inference in ecology: The analysis of data from populations, metapopulations and communities. Elsevier.</p>
 </div>
 <div id="ref-Schrader2013">
-<p>Schrader, W. C., M. P. Corsi, P. Kennedy, M. W. Ackerman, M. R. Campbell, K. K. Wright, and T. Copeland. 2013. Wild adult steelhead and Chinook salmon abundance and composition at Lower Granite dam, spawn year 2011. Idaho Department of Fish; Game, Report 13-15.</p>
+<p>Schrader, W. C., M. P. Corsi, P. Kennedy, M. W. Ackerman, M. R. Campbell, K. K. Wright, and T. Copeland. 2013. Wild adult steelhead and Chinook Salmon abundance and composition at Lower Granite Dam, spawn year 2011. Idaho Department of Fish and Game, Fishery Research, Annual Report 13-15.</p>
 </div>
 <div id="ref-Seber2002">
 <p>Seber, G. A. F. 2002. The estimation of animal abundance and related parameters. Blackburn Press Caldwell, New Jersey.</p>
@@ -571,52 +558,52 @@ Ryan and Kevin decided to not go down this path. One quick comparison is total e
 <p>Shumway, R. H., and D. S. Stoffer. 2010. Time series analysis and its applications: With R examples. Springer.</p>
 </div>
 <div id="ref-Steele2013">
-<p>Steele, C. A., E. C. Anderson, M. W. Ackerman, M. A. Hess, N. R. Campbell, S. R. Narum, and M. R. Campbell. 2013. A validation of parentage-based tagging using hatchery steelhead in the Snake River basin. Canadian Journal of Fisheries and Aquatic Sciences 70(7):1046–1054. NRC Research Press.</p>
+<p>Steele, C. A., E. C. Anderson, M. W. Ackerman, M. A. Hess, N. R. Campbell, S. R. Narum, and M. R. Campbell. 2013. A validation of parentage-based tagging using hatchery steelhead in the Snake River basin. Canadian Journal of Fisheries and Aquatic Sciences 70(7):1046–1054.</p>
 </div>
 <div id="ref-Steele2019">
-<p>Steele, C. A., M. Hess, S. Narum, and M. Campbell. 2019. Parentage-based tagging: Reviewing the implementation of a new tool for an old problem. Fisheries. Wiley Online Library.</p>
+<p>Steele, C. A., M. Hess, S. Narum, and M. Campbell. 2019. Parentage-based tagging: Reviewing the implementation of a new tool for an old problem. Fisheries:1–11.</p>
 </div>
 <div id="ref-Steinhorst2017">
 <p>Steinhorst, K., T. Copeland, M. W. Ackerman, W. C. Schrader, and E. C. Anderson. 2017. Abundance estimates and confidence intervals for the run composition of returning salmonids. Fishery Bulletin 115(1):1–12.</p>
 </div>
 <div id="ref-USACE2010">
-<p>USACE. 2010. Annual fish passage report Columbia and Snake rivers. U.S. Army Corps of Engineers.</p>
+<p>USACE. 2010. Annual fish passage report, Columbia and Snake river projects. U.S. Army Corps of Engineers.</p>
 </div>
 <div id="ref-USACE2011">
-<p>USACE. 2011. Annual fish passage report Columbia and Snake rivers. U.S. Army Corps of Engineers.</p>
+<p>USACE. 2011. Annual fish passage report, Columbia and Snake river projects. U.S. Army Corps of Engineers.</p>
 </div>
 <div id="ref-USACE2012">
-<p>USACE. 2012. Annual fish passage report Columbia and Snake rivers. U.S. Army Corps of Engineers.</p>
+<p>USACE. 2012. Annual fish passage report, Columbia and Snake river projects. U.S. Army Corps of Engineers.</p>
 </div>
 <div id="ref-USACE2013">
-<p>USACE. 2013. Annual fish passage report Columbia and Snake rivers. U.S. Army Corps of Engineers.</p>
+<p>USACE. 2013. Annual fish passage report, Columbia and Snake river projects. U.S. Army Corps of Engineers.</p>
 </div>
 <div id="ref-USACE2015">
-<p>USACE. 2015. Annual fish passage report Columbia and Snake rivers. U.S. Army Corps of Engineers.</p>
+<p>USACE. 2015. Annual fish passage report, Columbia and Snake river projects. U.S. Army Corps of Engineers.</p>
 </div>
 <div id="ref-USACE2016">
-<p>USACE. 2016. Annual fish passage report Columbia and Snake rivers. U.S. Army Corps of Engineers.</p>
+<p>USACE. 2016. Annual fish passage report, Columbia and Snake river projects. U.S. Army Corps of Engineers.</p>
 </div>
 <div id="ref-USACE2017">
-<p>USACE. 2017. Annual fish passage report Columbia and Snake rivers. U.S. Army Corps of Engineers.</p>
+<p>USACE. 2017. Annual fish passage report, Columbia and Snake river projects. U.S. Army Corps of Engineers.</p>
 </div>
 <div id="ref-USACE2018">
-<p>USACE. 2018. Annual fish passage report Columbia and Snake rivers. U.S. Army Corps of Engineers.</p>
+<p>USACE. 2018. Annual fish passage report, Columbia and Snake river projects. U.S. Army Corps of Engineers.</p>
 </div>
 <div id="ref-USACE2019">
-<p>USACE. 2019. Annual fish passage report Columbia and Snake rivers. U.S. Army Corps of Engineers.</p>
+<p>USACE. 2019. Annual fish passage report, Columbia and Snake river projects. U.S. Army Corps of Engineers.</p>
 </div>
 <div id="ref-Waterhouse2020">
-<p>Waterhouse, L., J. White, K. See, A. Murdoch, and B. X. Semmens. 2020. A Bayesian nested patch occupancy model to estimate steelhead movement and abundance. Ecological Applications:e02202. Wiley Online Library.</p>
+<p>Waterhouse, L., J. White, K. See, A. Murdoch, and B. X. Semmens. 2020. A Bayesian nested patch occupancy model to estimate steelhead movement and abundance. Ecological Applications:e02202.</p>
 </div>
 <div id="ref-Williams2016">
 <p>Williams, T. H., B. C. Spence, D. A. Boughton, R. C. Johnson, E. G. R. Crozier, N. J. Mantua, M. R. O’Farrell, and S. T. Lindley. 2016. Viability assessment for Pacific salmon and steelhead listed under the Endangered Species Act: Southwest. U.S. Department of Commerce, NOAA Technical Memorandum NMFS-SWFSC-564.</p>
 </div>
 <div id="ref-Wright2015">
-<p>Wright, K. K., W. C. Schrader, L. Reinhardt, K. Hernandez, C. Hohman, and T. Copeland. 2015. Process and methods for assigning ages to anadromous salmonids from scale samples. Idaho Department of Fish; Game, 15-03.</p>
+<p>Wright, K. K., W. C. Schrader, L. Reinhardt, K. Hernandez, C. Hohman, and T. Copeland. 2015. Process and methods for assigning ages to anadromous salmonids from scale samples. Idaho Department of Fish and Game, Fishery Research Report 15-03.</p>
 </div>
 <div id="ref-Zhang2019">
-<p>Zhang, X., H.-Y. Li, Z. D. Deng, L. R. Leung, J. R. Skalski, and S. J. Cooke. 2019. On the variable effects of climate change on Pacific salmon. Ecological Modelling 397:95–106. Elsevier.</p>
+<p>Zhang, X., H. Li, Z. D. Deng, L. R. Leung, J. R. Skalski, and S. J. Cooke. 2019. On the variable effects of climate change on Pacific salmon. Ecological Modelling 397:95–106. Elsevier.</p>
 </div>
 </div>
 <div style="page-break-after: always;"></div>
