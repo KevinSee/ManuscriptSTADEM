@@ -748,6 +748,9 @@ ts_col = plot_df %>%
                                 "Trap Est." = 8),
                      name = "Source") +
   theme_pubr(legend = "bottom") +
+  theme(panel.background = element_rect(color = "transparent"),
+        plot.background = element_rect(color = "transparent"),
+        legend.background = element_rect(color = "transparent")) +
   facet_wrap(~ plot_title,
              scales = "free",
              ncol = 2) +
