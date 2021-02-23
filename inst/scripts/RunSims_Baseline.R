@@ -7,19 +7,20 @@
 # load needed packages
 library(Hmisc)
 library(MCMCpack)
+library(gtools)
 library(FSA)
 library(Rcapture)
 library(boot)
 library(msm)
 library(lubridate)
 library(magrittr)
-library(plyr)
+library(purrr)
 library(dplyr)
 library(tidyr)
 library(jagsUI)
 
 # this contains the function to simulate data
-source('SimFnc.R')
+source('inst/scripts/SimFnc.R')
 
 #-----------------------------------------------------------------
 # set mcmc parameters
@@ -61,7 +62,8 @@ n_sim = 500
 # make it consistent and constant throughout the season
 my_trap_rate = data.frame(Week = 1:52,
                           trap.rate = 0.15,
-                          trap.open = T)
+                          trap.open = T) %>%
+  as_tibble()
 
 #-----------------------------------------------------------------
 # run simulations
