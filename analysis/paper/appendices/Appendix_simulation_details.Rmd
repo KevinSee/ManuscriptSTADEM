@@ -1,6 +1,6 @@
 # Appendix B - Simulation Details {#append2}
 
-To simulate fish passing a dam, an $\mathbb{R}$ software function was developed [@R-Core-Team2020]. The function randomly samples observations from assumed probability distribution functions (pdf) with known parameters. Total unique fish, $N$, and a vector, $\omega$, containing the proportions of wild ($w$), hatchery ($h$) and hatchery no-clip ($hnc$) fish passing the dam is set to establish known "truths" of escapement by origin.
+To simulate fish passing a dam, we developed an $\mathbb{R}$ software function [@R-Core-Team2020]. The function randomly samples observations from assumed probability distribution functions (pdf) with known parameters. Total unique fish, $N$, and a vector, $\omega$, containing the proportions of wild ($w$), hatchery ($h$) and hatchery no-clip ($hnc$) fish passing the dam is set to establish known "truths" of escapement by origin.
 
 $$
 \begin{aligned}
