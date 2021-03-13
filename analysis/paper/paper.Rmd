@@ -18,6 +18,15 @@ institute:
   - NezPerce: Nez Perce Tribe, Department of Fisheries Resource Management, 14054 Burr Road, PO Box 1942, McCall, Idaho, 83638, USA
 date: "`r format(Sys.time(), '%B %d, %Y')`"
 output:
+    bookdown::html_document2:
+      fig_caption: yes
+      number_sections: FALSE
+      toc: no
+      fig_width: 7
+      pandoc_args:
+      - --lua-filter=../templates/scholarly-metadata.lua
+      - --lua-filter=../templates/author-info-blocks2.lua
+      - --lua-filter=../templates/pagebreak.lua
     bookdown::word_document2:
       fig_caption: yes
       reference_docx: "../templates/template.docx" # Insert path for the DOCX file
@@ -28,15 +37,6 @@ output:
       pandoc_args:
       - --lua-filter=../templates/scholarly-metadata.lua
       - --lua-filter=../templates/author-info-blocks.lua
-      - --lua-filter=../templates/pagebreak.lua
-    bookdown::html_document2:
-      fig_caption: yes
-      number_sections: FALSE
-      toc: no
-      fig_width: 7
-      pandoc_args:
-      - --lua-filter=../templates/scholarly-metadata.lua
-      - --lua-filter=../templates/author-info-blocks2.lua
       - --lua-filter=../templates/pagebreak.lua
     bookdown::pdf_document2:
       fig_caption: yes
@@ -187,7 +187,8 @@ res_long_df <- res_df %>%
   rowwise() %>%
   mutate(se = (uppCI - lowCI) / (2 * qnorm(0.975)),
          cv = se / est,
-         bias = est - Truth,
+         # bias = est - Truth,
+         bias = Truth - est,
          rel_bias = bias / Truth,
          MSE = mean((bias)^2),
          inCI = ifelse(inCI == 1, T, ifelse(inCI == 0, F, NA)),
@@ -355,8 +356,8 @@ crossing(`Trap rate` = c('0.15',
                                             0.05)) %>%
   mutate(Scenario = paste(rep(c('Baseline',
                                 "N-R",
-                                "N-R trap down",
-                                "Trap down"),
+                                "Trap down",
+                                "N-R trap down"),
                               each = 3)),
          Scenario = if_else(`Window count error` == "5% Error",
                             paste(Scenario, "Err L"),
@@ -391,8 +392,10 @@ sum_tab <- res_long_df %>%
   summarise(inCI = sum(inCI),
             nsims = n(),
             Sample_Mean = mean(est),
+            `Mean bias` = mean(bias),
             `Relative bias` = mean(rel_bias),
             SE = sqrt(var(est)),
+            `Mean SE` = mean(se),
             `Mean CV` = mean(cv),
             RMSE = sqrt(mean(bias^2)),
             Coverage = inCI/nsims) %>%
@@ -403,12 +406,14 @@ sum_tab <- res_long_df %>%
                                 "Trap Down")) %>%
   select(Scenario,
          `Relative bias`,
+         `Mean bias`,
+         `Mean SE`,
          `Mean CV`,
          RMSE,
          Coverage)
 
 sum_tab %>%
-  kable(digits = c(0, 3, 3, 0, 3),
+  kable(digits = c(0, 3, 1, 0, 3, 0, 3),
         booktabs = T,
         linesep = "",
         caption = "Summary statistics, including relative bias, mean coefficient of variation (CV), root mean squared error (RMSE) and 95\\% credible interval coverage for results from each of the twelve simulation scenarios.") %>%
@@ -428,16 +433,23 @@ lgr_est %>%
                           "Year"),
               names_from = "variable",
               values_from = "prnt_val") %>%
+  left_join(lgr_est %>%
+              group_by(Species, Year) %>%
+              summarise(win_bias = mean[variable == "win_cnt"] - mean[variable == "X.tot.new.all"],
+                        win_rel_bias = win_bias / mean[variable == "win_cnt"])) %>%
+  mutate(across(win_rel_bias,
+                ~ paste(round(. * 100, 1), "%"))) %>%
   select(Species, 
          Year,
          `Window counts` = win_cnt,
+         `Window bias` = win_rel_bias,
          Total = X.tot.new.all,
          Wild = X.tot.new.wild,
          Hatchery = X.tot.new.hatch,
          `Hatchery no-clip` = X.tot.new.hnc) %>%
   kable(booktabs = T,
         linesep = "",
-        caption = "Window counts, and estimates of total, wild, hatchery and hatchery no-clip escapement, with coefficients of variation in parenthesis, for spring/summer-run Chinook Salmon and steelhead from spawn years 2010 to 2019.") %>%
+        caption = "Window counts, the relative bias of window counts compared to estimates of total escapement, and estimates of total, wild, hatchery and hatchery no-clip escapement, with coefficients of variation in parenthesis, for spring/summer-run Chinook Salmon and steelhead from spawn years 2010 to 2019.") %>%
   kable_styling(latex_options = c('scale_down',
                                   "hold_position"))
 
@@ -451,7 +463,12 @@ lgr_est %>%
 
 # Figures
 
-```{r stadem-examp-fig, fig.height = 5, fig.cap = "Schematic showing the STADEM model framework. (A) shows the posterior of the estimate of fish crossing the dam while the window is open (dashed line shows observed window counts). That estimate is divided by the nighttime passage rate (B). The total fish is then discounted by the re-ascension rate to estimate unique fish (C). Those unique fish are then multiplied by the proportions by origin (D), to estimate unique fish by origin."}
+```{r dag-fig, fig.height = 5, fig.cap = "Directed acyclic graph showing the STADEM model framework."}
+include_graphics("../figures/ModelSchematic.png")
+```
+
+
+```{r stadem-examp-fig, eval = F, fig.height = 5, fig.cap = "Schematic showing the STADEM model framework. (A) shows the posterior of the estimate of fish crossing the dam while the window is open (dashed line shows observed window counts). That estimate is divided by the nighttime passage rate (B). The total fish is then discounted by the re-ascension rate to estimate unique fish (C). Those unique fish are then multiplied by the proportions by origin (D), to estimate unique fish by origin."}
 
 arrow_length = unit(0.15, 'inches')
 arrow_height = 1.05
@@ -603,7 +620,7 @@ ggsave(paste0("../figures/stadem-examp-fig-col.", my_ext),
 
 \newpage
 
-```{r rel-bias-lgd, fig.cap = "Boxplots of the relative bias of STADEM estimates for wild escapement across various scenarios (See Table 1)."}
+```{r rel-bias-lgd-old, eval = F, fig.cap = "Boxplots of the relative bias of STADEM estimates for wild escapement across various scenarios (See Table 1)."}
 # hdi_box = function(x) {
 #   r = c(hdi(x, 0.95), hdi(x, 0.5), median(x))
 #   # r = quantile(x, probs = c(0.025, 0.975, 0.25, 0.75, 0.5))
@@ -655,6 +672,69 @@ ggsave(paste0("../figures/rel-bias-lgd-bw.", my_ext),
 
 ```
 
+```{r rel-bias-lgd, fig.cap = "Boxplots of the relative bias of window counts and STADEM estimates for total unique fish and STADEM estimates of unique wild fish across various scenarios (See Table 1)."}
+rel_bias_p = res_df %>%
+  mutate(across(sim,
+                as.integer)) %>%
+  filter(grepl('Unique', Variable)) %>%
+  group_by(Scenario,
+           sim) %>%
+  summarise(Truth = sum(Truth),
+            win_cnts = sum(SCOBI_est),
+            model_est = sum(ISEMP_est),
+            .groups = "drop") %>%
+  tibble::add_column(Variable = "Total Unique Fish",
+                     .after = "sim") %>%
+  bind_rows(res_df %>%
+              mutate(across(sim,
+                            as.integer)) %>%
+              filter(Variable == "Unique.Wild.Fish") %>%
+              mutate(Variable = recode(Variable,
+                                       "Unique.Wild.Fish" = "Unique Wild Fish")) %>%
+              select(Scenario, sim,
+                     Variable,
+                     Truth,
+                     model_est = ISEMP_est)) %>%
+  mutate(model_bias = model_est - Truth,
+         win_bias = win_cnts - Truth) %>%
+  mutate(across(ends_with("bias"),
+                ~ . / Truth)) %>%
+  select(Scenario, sim,
+         Variable,
+         ends_with("bias")) %>%
+  pivot_longer(cols = ends_with("bias"),
+               names_to = "source",
+               values_to = "bias") %>%
+  mutate(source = recode(source,
+                         "model_bias" = "Model",
+                         "win_bias" = "Window Count")) %>%
+  ggplot(aes(x = bias,
+             y = fct_rev(Scenario),
+             fill = source)) +
+  scale_fill_grey(start = 0.5,
+                  end = 0.9) +
+  geom_boxplot() +
+  geom_vline(xintercept = 0,
+             linetype = 2) +
+  theme(axis.text = element_text(size = 10)) +
+  facet_wrap(~ Variable) +
+  labs(x = "Relative Bias",
+       y = "Scenario",
+       fill = "Source") +
+  coord_fixed(0.03)
+
+rel_bias_p
+
+# save black and white version
+ggsave(paste0("../figures/rel-bias-lgd-bw.", my_ext),
+       rel_bias_p,
+       height = 5,
+       width = 3.5,
+       dpi = my_dpi)
+
+```
+
+
 \newpage
 
 ```{r jags-fit-fig, fig.cap = "Time-series plot showing estimates of total escapement for spring/summer-run Chinook Salmon in 2014, including window counts, trap estimates and STADEM estimates. The dark gray ribbon represents the 95% credible intervals for STADEM estimates, while the light gray ribbon represents the 95% confidence intervals for the trap estimates."}
@@ -667,12 +747,14 @@ plot_df = tibble(Species = "Chinook",
   mutate(plot_data = map2(Species, 
                           Year,
                           .f = function(x, y) {
-                            load(paste0('../data/derived_data/STADEM_results/LGR_STADEM_', Species, '_', Year, '.rda'))
-                            plot_df = stadem_mod$summary[grep('^X.all', rownames(stadem_mod$summary)),] %>%
+                            load(paste0('../data/derived_data/STADEM_results/LGR_STADEM_', x, '_', y, '.rda'))
+                            # plot_df = stadem_mod$summary[grep('^X.all', rownames(stadem_mod$summary)),] %>%
+                            plot_df = stadem_mod$summary[grep('^X.new', rownames(stadem_mod$summary)),] %>%  
                               as_tibble(rownames = 'var') %>%
                               mutate(week = as.integer(str_extract(var, "[0-9]+")),
                                      param = str_extract_all(var, "[:alpha:]+", simplify = T)[,3],
-                                     param = ifelse(param == '', 'all', param)) %>%
+                                     param = recode(param, "tot" = "all")) %>%
+                                     # param = ifelse(param == '', 'all', param)) %>%
                               select(var, param, week, everything()) %>%
                               left_join(stadem_list$weeklyData %>%
                                           rename(week = week_num) %>%
