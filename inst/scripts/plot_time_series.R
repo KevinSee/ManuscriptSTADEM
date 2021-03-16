@@ -20,11 +20,14 @@ plot_df = crossing(Species = c("Chinook",
                           Year,
                           .f = function(x, y) {
                             load(paste0('analysis/data/derived_data/STADEM_results/LGR_STADEM_', Species, '_', Year, '.rda'))
-                            plot_df = stadem_mod$summary[grep('^X.all', rownames(stadem_mod$summary)),] %>%
+                            # plot_df = stadem_mod$summary[grep('^X.all', rownames(stadem_mod$summary)),] %>%
+                            plot_df = stadem_mod$summary[grep('^X.new', rownames(stadem_mod$summary)),] %>%
                               as_tibble(rownames = 'var') %>%
                               mutate(week = as.integer(str_extract(var, "[0-9]+")),
                                      param = str_extract_all(var, "[:alpha:]+", simplify = T)[,3],
-                                     param = ifelse(param == '', 'all', param)) %>%
+                                     param = ifelse(param == '', 'all', param),
+                                     param = recode(param,
+                                                    "tot" = "all")) %>%
                               select(var, param, week, everything()) %>%
                               left_join(stadem_list$weeklyData %>%
                                           rename(week = week_num) %>%
@@ -111,7 +114,7 @@ for(spp in unique(plot_df$Species)) {
                scales = "free",
                ncol = 2) +
     labs(x = 'Date',
-         y = 'Total Escapement (x 10,000)')
+         y = 'Escapement (x 10,000)')
 
   # black and white version
   ts_bw = ts_col +
