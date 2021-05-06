@@ -1,12 +1,12 @@
 Package: ManuscriptSTADEM
-Title: STate-space Adult Dam Esapement Model
-Version: 0.0.0.9000
+Title: STate-space Adult Dam Esapement Model Manuscript
+Version: 1.0.0
 Authors@R:
     person(given = "Kevin",
            family = "See",
            role = c("aut", "cre"),
            email = "kevin.see@merck.com")
-Description: Provides estimates of total salmonid escapement past Lower Granite dam by year and origin (wild, hatchery and unclipped hatchery)
+Description: Provides code and Rmarkdown files related to the manuscript outlining STADEM. 
 License: MIT + file LICENSE
 ByteCompile: true
 Encoding: UTF-8
