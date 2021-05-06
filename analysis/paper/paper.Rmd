@@ -319,7 +319,7 @@ Escapement at LGR is estimated by combining two independent observations, trap c
 \begin{equation}
   \begin{aligned}
     \ln \left( X_{t} \right) &= \ln \left( X_{t-1} \right) + e_t \\
-    e_t &\sim \mathcal{N}(0, \sigma^2_X)
+    e_t &\sim \text{Normal}(0, \sigma^2_X)
   \end{aligned}
 \end{equation}
 
@@ -359,7 +359,7 @@ The nighttime passage rate is just the complement of the rate of fish passing du
   \begin{aligned}
     y^{day}_t &\sim \text{Bin} \left(\theta_t, N_t \right) \\
     \text{logit} (\theta_{t}) &= \text{logit} \left( \theta_{t-1} \right) + g_t \\
-    g_t &\sim \mathcal{N}(0, \sigma^2_\theta) \\
+    g_t &\sim \text{Normal}(0, \sigma^2_\theta) \\
   \end{aligned}
 \end{equation}
 
@@ -369,7 +369,7 @@ The number of total fish crossing LGR differs from the number of unique fish cro
   \begin{aligned}
     y^{reasc}_t &\sim \text{Bin} \left(\eta_t, N_t \right) \\
     \text{logit} \left( \eta_{t} \right) &= \text{logit} \left(\eta_{t-1} \right) + f_t \\
-    f_t &\sim \mathcal{N}(0, \sigma^2_\eta)
+    f_t &\sim \text{Normal}(0, \sigma^2_\eta)
   \end{aligned}
 \end{equation}
 
@@ -388,8 +388,8 @@ After estimating the total number of fish to have crossed LGR each week, $X_t$, 
     \phi_{hnc,t} &= \ln \left( \frac{\omega_{hnc,t}}{\omega_{hc,t}} \right) \\
     \phi_{w,t} &= \phi_{w, t-1} + d_{w,t} \\
     \phi_{hnc,t} &= \phi_{hnc, t-1} + d_{hnc,t} \\
-    d_{w,t} &\sim \mathcal{N}(0, \sigma^2_\omega) \\
-    d_{hnc,t} &\sim \mathcal{N}(0, \sigma^2_\omega) \\
+    d_{w,t} &\sim \text{Normal}(0, \sigma^2_\omega) \\
+    d_{hnc,t} &\sim \text{Normal}(0, \sigma^2_\omega) \\
   \end{aligned}
 \end{equation}
 
