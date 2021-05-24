@@ -1,56 +1,32 @@
 
 <!-- README.md is generated from README.Rmd. Please edit that file -->
 
-**Possible journals:**
-
-First Choice:
-
-  - **[North American Journal of Fisheries
-    Management](https://afspubs.onlinelibrary.wiley.com/journal/15488675)**
-
-Second Choice:
-
-  - [Transactions of the American Fisheries
-    Society](https://afspubs.onlinelibrary.wiley.com/journal/15488659)
-
-Others:
-
-  - [Canadian Journal of Fisheries and Aquatic
-    Sciences](http://www.nrcresearchpress.com/page/cjfas/editors)
-
-  - [Fisheries
-    Research](https://www.journals.elsevier.com/fisheries-research)
-
-  - [Fishery Bulletin](http://fishbull.noaa.gov/)
-
-  - [Fish and
-    Fisheries](http://onlinelibrary.wiley.com/journal/10.1111/\(ISSN\)1467-2979/homepage/ProductInformation.html)
-
 # ManuscriptSTADEM
 
 [![Binder](https://mybinder.org/badge_logo.svg)](https://mybinder.org/v2/gh/KevinSee/ManuscriptSTADEM/master?urlpath=rstudio)
 
 This repository contains the data and code for our paper:
 
-> See, K.E., R.N. Kinzer and M.W. Ackerman (2020). *State-Space Model to
-> Estimate Salmon Escapement Using Multiple Data Sources*. Name of
-> journal/book <https://doi.org/xxx/xxx>
+> See, K.E., R.N. Kinzer and M.W. Ackerman (2021). *State-Space Model to
+> Estimate Salmon Escapement Using Multiple Data Sources*. North
+> American Journal of Fisheries Management
+> <https://doi.org/10.1002/nafm.10649>
 
 Our pre-print is online here:
 
-> See, K.E., R.N. Kinzer and M.W. Ackerman (2020). *State-Space Model to
-> Estimate Salmon Escapement Using Multiple Data Sources*. Name of
-> journal/book, Accessed 27 Aug 2020. Online at
-> <https://doi.org/xxx/xxx>
+> See, K.E., R.N. Kinzer and M.W. Ackerman (2021). *State-Space Model to
+> Estimate Salmon Escapement Using Multiple Data Sources*. North
+> American Journal of Fisheries Management, Accessed 24 May 2021. Online
+> at <https://doi.org/10.1002/nafm.10649>
 
 ### How to cite
 
 Please cite this compendium as:
 
-> See, K.E., R.N. Kinzer and M.W. Ackerman (2020). *Compendium of R code
+> See, K.E., R.N. Kinzer and M.W. Ackerman (2021). *Compendium of R code
 > and data for State-Space Model to Estimate Salmon Escapement Using
-> Multiple Data Sources*. Accessed 27 Aug 2020. Online at
-> <https://doi.org/xxx/xxx>
+> Multiple Data Sources*. Accessed 24 May 2021. Online at
+> <https://doi.org/10.1002/nafm.10649>
 
 ### How to download or install
 
