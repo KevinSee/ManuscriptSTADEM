@@ -41,8 +41,6 @@ from GitHub with:
 remotes::install_github("KevinSee/ManuscriptSTADEM")
 ```
 
-To
-
 ### Licenses
 
 **Text and figures :**

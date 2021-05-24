@@ -45,8 +45,6 @@ Or you can install this compendium as an R package, ManuscriptSTADEM, from GitHu
 remotes::install_github("KevinSee/ManuscriptSTADEM")
 ```
 
-To 
-
 ### Licenses
 
 **Text and figures :**  [CC-BY-4.0](http://creativecommons.org/licenses/by/4.0/)
